@@ -4,7 +4,6 @@ import BoxDash from "@src/app/components/system/BoxDash";
 import { useTheme } from "@src/app/theme/ThemeProvider"
 import Box from "@src/app/theme/components/Box/Box"
 import Text from "@src/app/theme/components/Text/Text";
-import { dataTable } from "@src/app/components/system/Mockup";
 import TableHead from "@src/app/components/system/Table/TableHead";
 import TableRow from "@src/app/components/system/Table/TableRow";
 import TableCell from "@src/app/components/system/Table/TableCell";
@@ -17,7 +16,6 @@ import Pagination from "@src/app/components/system/Pagination";
 import { useContext, useEffect, useState } from "react";
 import BuffetService from "@src/app/api/BuffetService";
 import { UserContext } from "@src/app/context/UserContext";
-import OrcamentoRouter from "@src/app/content/system/buffet/Settings/BudgetsRouter";
 import moment from "moment-timezone";
 import { FilterArrows } from "@src/app/content/system/admin/screens/pages/common/FilterArrows";
 import { useFilterFunctions } from "@src/app/content/system/admin/screens/pages/common/useFilterFunctions";
@@ -120,6 +118,7 @@ const Homedash = () =>{
               <TableCell>Valor<FilterArrows functionupArrow={orderByGrowing} functionDownArrow={orderByDescending} property="id"/></TableCell>
               <TableCell>Observações<FilterArrows functionupArrow={orderByGrowing} functionDownArrow={orderByDescending} property="id"/></TableCell>
               <TableCell>Arquivo<FilterArrows functionupArrow={orderByGrowing} functionDownArrow={orderByDescending} property="id"/></TableCell>
+
             </TableRow>
           </TableHead>
 
@@ -131,7 +130,7 @@ const Homedash = () =>{
                 <TableCell>{converterData(item?.['data_do_evento'])}</TableCell>
                 <TableCell>{item?.evento?.['qtd_pessoas']}</TableCell>
                 <TableCell>{(item?.['valor']).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</TableCell>
-                <Text styleSheet={{textAlign: 'left', color: 'black'}}>{item?.['observacoes']}</Text>
+                <TableCell styleSheet={{textAlign: 'left', color: 'black'}}>{item?.['observacoes']}</TableCell>
                 <TableCell styleSheet={{display: 'flex', justifyContent: 'center', alignItems: 'left'}}>
                   <Box onClick={(e)=>DownloadLink(index)}>
                     <Icon name="file" id='downloadLink' />

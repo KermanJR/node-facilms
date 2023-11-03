@@ -111,7 +111,7 @@ export default function HomeScreen(){
             textAlign: 'center',
         }}
         >
-          Buffet por categorias
+          Principais Categorias
       </Text>
 
       <Text variant="heading6" tag="h6"

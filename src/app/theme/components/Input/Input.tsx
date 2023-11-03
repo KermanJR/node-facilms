@@ -14,6 +14,7 @@ interface InputProps {
   required?: boolean;
   name?: string;
   checked?: boolean;
+  disabled?: boolean;
   id?: string
 }
 

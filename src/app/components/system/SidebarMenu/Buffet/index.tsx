@@ -8,18 +8,23 @@ import theme from '@src/app/theme/theme';
 import Text from '@src/app/theme/components/Text/Text';
 import BuffetService from '@src/app/api/BuffetService';
 import { UserContext } from '@src/app/context/UserContext';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleDown, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 
 const SidebarMenuIsOpenBuffet = () => {
   const [openedSubmenu, setOpenedSubmenu] = useState('');
+  const [status, setStatus] = useState('');
 
   const [href, setHref] = useState('');
   const router = useRouter();
   const { setActivePage, isOpen, activePage } = useContext(ActivePageContext);
   const {
-    setIdEvent
+    setIdEvent,
+    dataBuffet
   } = useContext(UserContext)
   
+
+
   const menuItems = [
     { label: 'Dashboard', icon: 'dashboard'},
     { label: 'Orçamentos', icon: 'events'},
@@ -30,8 +35,14 @@ const SidebarMenuIsOpenBuffet = () => {
         { label: 'Imagens', action: () => setActivePage('Imagens') }
       ]
     },
+    { 
+      label: 'Configurações', 
+      icon: 'settings2', 
+    },
     { label: 'Voltar ao site', icon: 'site', action: () => BuffetService.logout() }
 ];
+
+
 
 
   const toggleSubmenu = (label) => {
@@ -69,15 +80,19 @@ const SidebarMenuIsOpenBuffet = () => {
     setHref(window.document.location.pathname);
   }, []);
 
+
+
   return (
     <>
     {isOpen? 
-      <Box styleSheet={{marginTop: '-1rem'}}>
+      <Box styleSheet={{marginTop: '-1rem', filter: dataBuffet && dataBuffet['status'] == 'P'? 'blur(2px)': 'none', pointerEvents: dataBuffet && dataBuffet['status'] == 'P'? 'none': ''}} >
         {menuItems.map((item) => (
           <>
-            <Box key={item.label} tag='li' styleSheet={menuItemStyle(item.label)}>
+            <Box key={item.label} tag='li' styleSheet={menuItemStyle(item.label)} disabled={dataBuffet && dataBuffet['status'] == 'P'? true : false}>
               <LinkSystem
+  
                 key={item?.label}
+              
                 href=""
                 onClick={() => {
                   if(item.submenu){
@@ -95,15 +110,36 @@ const SidebarMenuIsOpenBuffet = () => {
                 styleSheet={linkStyle(item.label)}
               >
                 <Icon name={item.icon} fill={theme.colors.neutral.x500} />
-                <Box styleSheet={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '10rem'}}>
-                  {isOpen && item.label != 'Voltar ao site'? 
-                    <Text color={theme.colors.neutral.x900}>{item.label}</Text>
-                    :
+                <Box styleSheet={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '15rem'}}>
+                  {isOpen && item.label == 'Perfil' &&
+                  <>
+                  {isOpen && !openedSubmenu  &&(
                     <>
-                      <Text color={theme.colors.neutral.x900}>{item.label}</Text>
-                      <Icon name='arrowChevronRight'/>
+                      <Text color={theme.colors.neutral.x900} styleSheet={{marginTop: '.2rem'}}>{item.label}</Text>
+                      <div>
+                        <FontAwesomeIcon icon={faAngleRight} rotate={isOpen ? 180 : 0} />
+                      </div>
                     </>
+                  )}
+                 
+                  {isOpen && openedSubmenu && (
+                    <>
+                      <Text color={theme.colors.neutral.x900} styleSheet={{marginTop: '.2rem'}}>{item.label}</Text>
+                      <div>
+                        <FontAwesomeIcon icon={faAngleDown} rotate={isOpen ? 180 : 0} />
+                      </div>
+                    </>
+                  )}
+                  </>
                   }
+
+      {isOpen && item.label != 'Perfil' && (
+          <>
+          <Text color={theme.colors.neutral.x900} styleSheet={{marginTop: '.2rem'}}>{item.label}</Text>
+        </>
+
+      )}
+                    
                 </Box>
               </LinkSystem>
             </Box>
@@ -122,6 +158,7 @@ const SidebarMenuIsOpenBuffet = () => {
                 ))}
               </Box>
             )}
+            
           </>
         ))}
       </Box>

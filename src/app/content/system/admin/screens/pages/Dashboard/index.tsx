@@ -88,6 +88,8 @@ const Homedash = () =>{
   };
   
 
+
+  console.log(viewPayments)
   
 
   return(
@@ -239,7 +241,7 @@ const Homedash = () =>{
                 )}
 
 
-                {item.status === 'Aprovado' && (
+                {item.status === 'ACTIVE' && (
                   <Box tag="td"
                   styleSheet={{
                     padding: '.7rem',
@@ -252,11 +254,54 @@ const Homedash = () =>{
                       textAlign: 'center'
                     }}
                   >
-                    {item?.['status']}
+                    Ativo
                   </Text>
                 
                 </Box>
                 )}
+
+                {item.status === 'OVERDUE'  && (
+                  <Box tag="td"
+                  styleSheet={{
+                    padding: '.7rem',
+                    borderRadius: '10px',
+                    backgroundColor: theme.colors.secondary.x1100,
+                    color: theme.colors.secondary.x700
+                  }}    
+                >
+                  <Text styleSheet={{
+                       color: theme.colors.secondary.x700,
+                      textAlign: 'Pagamento recusado'
+                    }}
+                  >
+                    Pendente
+                  </Text>
+                
+                </Box>
+                )}
+
+            {item.status === 'CANCELED'  && (
+                  <Box tag="td"
+                  styleSheet={{
+                    padding: '.7rem',
+                    borderRadius: '10px',
+                    backgroundColor: theme.colors.negative.x400,
+                   
+                  }}    
+                >
+                  <Text styleSheet={{
+                      backgroundColor: theme.colors.negative.x600,
+                      textAlign: 'center'
+                    }}
+                  >
+                    Cancelado
+                  </Text>
+                
+                </Box>
+                )}
+
+
+
                 {(item.status === "Avaliação" || item.status == null) && (
                   <Box tag="td"
                   styleSheet={{

@@ -10,7 +10,8 @@ import { useRouter } from "next/dist/client/router";
 import Slider from 'react-slick';
 import {Carousel} from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-
+import ImageAniver from '../../../../../../../../public/assets/images/aniversario-removebg-preview.png'
+import ImageCasamento from '../../../../../../../../public/assets/images/casamento-removebg-preview.png'
 
 interface BuffetProps{
   categoria: string;
@@ -63,7 +64,7 @@ const CarouselTest: React.FC<CarouselProps> = ({ items, styleSheet, className, .
     router.push('/busca')
   }
   
-    ['Infantil', 'Domicílio', 'Casamento', 'Confraternização', 'Outros'];
+    ['Infantil', 'Domicílio', 'Casamento', 'Confraternização', 'Aniversário'];
   let typesOfParty=[
     {
       label: 'Infantil',
@@ -82,7 +83,7 @@ const CarouselTest: React.FC<CarouselProps> = ({ items, styleSheet, className, .
       image: 'https://images.pexels.com/photos/4005229/pexels-photo-4005229.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     },
     {
-      label: 'Outros',
+      label: 'Aniversário',
       image: 'https://images.pexels.com/photos/2291347/pexels-photo-2291347.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
     }
   ]
@@ -138,7 +139,7 @@ const CarouselTest: React.FC<CarouselProps> = ({ items, styleSheet, className, .
         </Box>
         <Box styleSheet={{marginTop: (size <= 650) ? '-1rem' : '0' }}><Text>Confraternização</Text></Box>
       </Box>
-      <Box styleSheet={{display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', gap: (size <= 650) ? '2rem' : '1rem'}} onClick={(e)=>SelectCategory('Outros')}>
+      <Box styleSheet={{display: 'flex', flexDirection: 'column', alignItems: 'center', cursor: 'pointer', gap: (size <= 650) ? '2rem' : '1rem'}} onClick={(e)=>SelectCategory('Aniversário')}>
         <Box styleSheet={{
           background: 'URL(https://images.pexels.com/photos/2291347/pexels-photo-2291347.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1)',
           borderRadius: '100%', height: '150px', width: '150px',
@@ -147,7 +148,7 @@ const CarouselTest: React.FC<CarouselProps> = ({ items, styleSheet, className, .
         }}>
 
         </Box>
-        <Box styleSheet={{marginTop: (size <= 650) ? '-1rem' : '0' }}><Text>Outros</Text></Box>
+        <Box styleSheet={{marginTop: (size <= 650) ? '-1rem' : '0' }}><Text>Aniversário</Text></Box>
       </Box>
     </Box>:
      <Carousel

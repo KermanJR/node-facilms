@@ -6,11 +6,12 @@ import Image from "@src/app/theme/components/Image/Image";
 import Icon from "@src/app/theme/components/Icon/Icon";
 import BuffetService from "@src/app/api/BuffetService";
 import {useContext, useEffect, useState } from "react";
-import Button from "@src/app/theme/components/Button/Button";
+
 import { UserContext } from "@src/app/context/UserContext";
 import MockImage1 from 'public/assets/images/mock_image.jpg';
 import MockImage2 from 'public/assets/images/mock_image_2.jpg'
-import { it } from "node:test";
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 const ImagesBuffet = () =>{
@@ -41,12 +42,57 @@ const ImagesBuffet = () =>{
 
   const [modeGallery, setModeGallery] = useState('create');
 
+  const [capacityTotalBuffet, setCapacityTotalBuffet] = useState(null);
+  const [areaTotal, setAreaTotal] = useState('');
+  const [aboutBuffet, setAboutBuffet] = useState<string>('');
+  const [phoneBuffet, setPhoneBuffet] = useState<string>('');
+  const [urlYoutube, setUrlYoutube] = useState<string>('');
+  const [attractionsBuffets, setAttractionsBuffets] = useState<[]>([]);
+  const [servicesBuffets, setServicesBuffets] = useState<[]>([]);
+  const [youtube, setYoutube] = useState('')
+
+
+  const [auxAttractiveBuffets, setAuxAttractivesBuffet] = useState([]);
+  const [auxServicesBuffets, setAuxServicesBuffet] = useState([]);
+
+
+  const [detailsBuffet, setDetailsBuffet] = useState([]);
+  const [idDetailsBuffet, setIdDetailsBuffet] = useState([]);
+  const [idBuffetLocal, setIdBuffetLocal] = useState('');
+  const [hoursWeek, setHoursWeek] = useState<string>('');
+  const [hoursWeekend, setHoursWeekend] = useState<string>('')
+  const [slug, setSlug] = useState<string>('')
+  const [addressBuffet, setAddressBuffet] = useState<[]>([])
+
+  const [typeSignature, setTypeSignatue] = useState('')
+
+
+  const [isLoading1, setIsLoading1] = useState(false);
+  const [isLoading2, setIsLoading2] = useState(false);
+  const [isLoading3, setIsLoading3] = useState(false);
+  const [message, setMessage] = useState('');
+
+  //Data Address BUFFET
+  const [cep, setCep] = useState<string>('');
+  const [rua, setRua] = useState('');
+  const [bairro, setBairro] = useState<string>('');
+  const [numero, setNumero] = useState<string>('');
+  const [complemento, setComplemento] = useState<string>('');
+  const [cidade, setCidade] = useState<string>(null);
+  const [idCidade, setIdCidade] = useState<number>(null);
+  const [idAddress, setIdAddress] = useState<number>(null);
+  const [estado, setEstado] = useState<string>(null);
+  const [idEstado, setIdEstado] = useState<number>(null);
+
+
+
   let idImagesGallery = []
 
   const theme = useTheme();
 
   const {
-    idBuffet
+    idBuffet,
+    dataBuffet
   } = useContext(UserContext)
 
 
@@ -119,6 +165,7 @@ const ImagesBuffet = () =>{
 
 //Postar Imagens
 async function PostFirstImageBuffetOne() {
+  setIsLoading1(true)
   if(selectedImageOne){
     BuffetService.postFileBuffet(selectedImageOne)
     .then(async (response) => {
@@ -138,11 +185,15 @@ async function PostFirstImageBuffetOne() {
   }else if(selectedImageOne == null){
     setMessageFirstImage('Por favor, selecione uma imagem.')
   }
-  
-   
+
+  setTimeout(()=>{
+    setIsLoading1(false)
+  }, 1000)
+
 }
 
 async function PostFirstImageBuffetTwo() {
+  setIsLoading2(true)
   if(selectedImageTwo && selectedImageOne){
     BuffetService.postFileBuffet(selectedImageTwo)
     .then(async (response) => {
@@ -152,6 +203,7 @@ async function PostFirstImageBuffetTwo() {
         createGalleryBuffet(response?.id);
         setModeSecondImage('edit')
         setMessageSecondImage('Imagem cadastrada com sucesso.')
+        EditBuffet()
       } catch (error) {
         setMessageSecondImage('Erro no cadastro da imagem.')
         console.error('Erro ao carregar e exibir a imagem:', error);
@@ -165,10 +217,14 @@ async function PostFirstImageBuffetTwo() {
   }else if(selectedImageTwo && !selectedImageOne){
     setMessageSecondImage('Por favor, primeiro selecione a foto de capa do perfil.')
   }
+   setTimeout(()=>{
+    setIsLoading2(false)
+  }, 1000)
   
 }
 
 async function PostFirstImageBuffetThree() {
+  setIsLoading3(true)
   if(selectedImageThree?.length > 0 && selectedImageOne && selectedImageTwo){
     selectedImageThree.forEach((imageFile) => {
       BuffetService.postFileBuffet(imageFile)
@@ -191,12 +247,15 @@ async function PostFirstImageBuffetThree() {
   else if(selectedImageThree?.length > 0 && !selectedImageOne && !selectedImageTwo){
     setMessageThreeImage('Por favor, primeiro selecione a foto de capa e perfil do buffet.')
   }
+   setTimeout(()=>{
+    setIsLoading3(false)
+  }, 1000)
   
 }
 
-
 //Editar Imagens
 async function EditFirstImageBuffetOne() {
+  setIsLoading1(true)
   if(selectedImageOne){
   BuffetService.editFileBuffet(selectedImageOne, idImageOne)
     .then(async (response) => {
@@ -215,9 +274,14 @@ async function EditFirstImageBuffetOne() {
   }else if(selectedImageOne == null){
       setMessageFirstImage('Por favor, selecione uma imagem.')
     }
+     setTimeout(()=>{
+    setIsLoading1(false)
+  }, 1000)
+  
 }
 
 async function EditFirstImageBuffetTwo() {
+  setIsLoading2(true)
   if(selectedImageTwo){
   BuffetService.editFileBuffet(selectedImageTwo, idImageTwo)
     .then(async (response) => {
@@ -235,9 +299,14 @@ async function EditFirstImageBuffetTwo() {
   }else if(selectedImageTwo == null){
       setMessageSecondImage('Por favor, selecione uma imagem.')
     }
+     setTimeout(()=>{
+    setIsLoading2(false)
+  }, 1000)
+  
 }
 
 async function EditFirstImageBuffetThree() {
+  setIsLoading3(true)
   if(selectedImageThree?.length > 0){
     selectedImageThree.forEach((imageFile) => {
       BuffetService.editFileBuffet(imageFile, imageFile?.id_arquivo)
@@ -253,6 +322,10 @@ async function EditFirstImageBuffetThree() {
   }else if(selectedImageThree?.length == 0){
     setMessageThreeImage('Por favor, selecione uma imagem.')
   }
+   setTimeout(()=>{
+    setIsLoading3(false)
+  }, 1000)
+  
   
 }
 
@@ -298,7 +371,6 @@ function createGalleryBuffet(id_image){
         setModeFirstImage('edit')
       }
       if(response[1]){
-      
         setSelectedImageTwo(response[1]?.arquivo?.path);
         setModeSecondImage('edit')
         setIdImageTwo(response[1]?.arquivo?.id)
@@ -319,7 +391,56 @@ function createGalleryBuffet(id_image){
     })
   }, [])
 
+   //RETORNA OS DADOS DO BUFFET PELO SEU ID
+   function GetBuffetById(){
+    BuffetService.showBuffetByIdEntity(dataBuffet['entidade']?.id)
+    .then((response) => {
+        setSlug(response?.slug)
+        setAreaTotal(response?.area_total);
+        setAboutBuffet(response?.sobre);
+        setCapacityTotalBuffet(response?.capacidade_total);
+        setSlug(response?.slug);
+        setHoursWeek(response?.horario_atendimento);
+        setHoursWeekend(response?.horario_atendimento_fds);
+        setYoutube(response?.youtube)
   
+    })
+    .catch((error) => {
+      console.error('Erro ao buscar dados do Buffet:', error);
+    });
+  }
+
+  
+
+
+
+  function EditBuffet(){
+    BuffetService.editBuffets(idBuffet, {
+      slug: slug,
+      capacidade_total: capacityTotalBuffet,
+      area_total: areaTotal,
+      sobre: aboutBuffet,
+      horario_atendimento: hoursWeek,
+      horario_atendimento_fds: hoursWeekend,
+      youtube: youtube,
+      status: 'A',
+      redes_sociais: [
+        {
+            "descricao": "https://www.youtube.com/",
+            "tipo": urlYoutube? urlYoutube: 'Nenhum'
+        }
+      ]
+    })
+    .then(async (response)=>{
+      console.log(response)
+    }).catch((error)=>{
+      setMessage('Erro ao salvar dados, tente novamente');
+      console.log(error)
+    })
+  }
+
+  
+ 
   useEffect(() => {
     const clearMessages = () => {
       setTimeout(() => {
@@ -334,10 +455,11 @@ function createGalleryBuffet(id_image){
     }
   }, [messageFirstImage, messageSecondImage, messageThreeImage]);
 
- 
 
 
-
+  useEffect(()=>{
+    GetBuffetById();
+  }, [])
 
 
   const EventActionPopup = () => (
@@ -369,11 +491,29 @@ function createGalleryBuffet(id_image){
       height: 'auto',
       backgroundColor: theme.colors.neutral.x000,
       borderRadius: '8px',
-      padding: '2rem'
+      padding: '2rem',
     }}>
+      {idBuffet == null || idBuffet == undefined ? (
+        <Box
+          styleSheet={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(255, 255, 255, 0.5)', // Fundo branco transparente
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 2
+          }}
+        >
+          <Text styleSheet={{ fontSize: '18px', color: theme.colors.secondary.x500 }}>
+            Por favor, preencha os dados do Buffet para inserir as imagens.
+          </Text>
+        </Box>
+      ) : null}
      <Box styleSheet={{display: 'grid',gridTemplateColumns: '1fr 1fr', gap: '4rem'}}>
-   
-          
         <Box>
           <Box styleSheet={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px'}}>
             <Text variant="small" color={theme.colors.neutral.x500}>Recomendação</Text>
@@ -449,17 +589,21 @@ function createGalleryBuffet(id_image){
             )
           }
           <Box styleSheet={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-            <Button  
-              type="submit" 
-              styleSheet={{
-                width: '100px',
-                marginTop: '1rem'
-              }}
-              colorVariant="secondary"
-              onClick={modeFirstImage == 'create'? PostFirstImageBuffetOne : EditFirstImageBuffetOne}
-              >
-              Salvar
-            </Button>
+          <Button
+          type="submit"
+          variant="contained"
+           onClick={modeFirstImage == 'create'? PostFirstImageBuffetOne : EditFirstImageBuffetOne}
+          disabled={isLoading1}
+          style={{
+            backgroundColor: theme.colors.secondary.x500,
+            borderRadius: '20px',
+            marginTop: '1rem',
+            zIndex: 1
+          }}
+          startIcon={isLoading1 ? <CircularProgress size={20} color="inherit" /> : null}
+        >
+          {isLoading1 ? <Text color={theme.colors.neutral.x000}>Salvando...</Text> : <Text  color={theme.colors.neutral.x000}>Salvar</Text>}
+        </Button>
             {messageFirstImage == 'Imagem cadastrada com sucesso.' && 
               <Text styleSheet={{color: 'green', fontSize: '.8rem', alignSelf:' center', padding: '1rem', height: '10px'}}>Imagem cadastrada com sucesso.</Text>
             }
@@ -504,17 +648,20 @@ function createGalleryBuffet(id_image){
           )}
           
         <Box styleSheet={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-          <Button  
-              type="submit" 
-              styleSheet={{
-                width: '100px',
-                marginTop: '1rem'
-              }}
-              colorVariant="secondary"
-              onClick={modeSecondImage == 'create'? PostFirstImageBuffetTwo : EditFirstImageBuffetTwo}
-              >
-              Salvar
-            </Button>
+        <Button
+          type="submit"
+          variant="contained"
+            onClick={modeSecondImage == 'create'? PostFirstImageBuffetTwo : EditFirstImageBuffetTwo}
+          disabled={isLoading2}
+          style={{
+            backgroundColor: theme.colors.secondary.x500,
+            borderRadius: '20px',
+            marginTop: '1rem'
+          }}
+          startIcon={isLoading2 ? <CircularProgress size={20} color="inherit" /> : null}
+        >
+          {isLoading2 ? <Text color={theme.colors.neutral.x000}>Salvando...</Text> : <Text  color={theme.colors.neutral.x000}>Salvar</Text>}
+        </Button>
             {messageSecondImage == 'Imagem cadastrada com sucesso.' && 
               <Text styleSheet={{color: 'green', fontSize: '.8rem', alignSelf:' center', padding: '1rem', height: '10px'}}>Imagem cadastrada com sucesso.</Text>
             }
@@ -595,28 +742,34 @@ function createGalleryBuffet(id_image){
       }
      </Box>
      <Box styleSheet={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '1rem'}}>
-      <Button  
-        styleSheet={{
-          width: '100px',
-          marginTop: '6rem'
-        }}
-        onClick={modeGalleryImage === 'create'? PostFirstImageBuffetThree:EditFirstImageBuffetThree}
-        colorVariant="secondary"
-      >
-          Salvar
-      </Button>
+     <Button
+          type="submit"
+          variant="contained"
+            onClick={modeGalleryImage === 'create'? PostFirstImageBuffetThree:EditFirstImageBuffetThree}
+          disabled={isLoading3}
+          style={{
+            backgroundColor: theme.colors.secondary.x500,
+            borderRadius: '20px',
+            marginTop: '1rem'
+          }}
+          startIcon={isLoading3 ? <CircularProgress size={20} color="inherit" /> : null}
+        >
+          {isLoading3 ? <Text color={theme.colors.neutral.x000}>Salvando...</Text> : <Text  color={theme.colors.neutral.x000}>Salvar</Text>}
+        </Button>
      
 
-      <Button  
-        styleSheet={{
-          width: '200px',
-          marginTop: '6rem'
-        }}
-        onClick={(e)=>removeAllImages()}
-        colorVariant="primary"
-      >
-          Remover imagens
-      </Button>
+        <Button
+          type="submit"
+          variant="contained"
+               onClick={(e)=>removeAllImages()}
+          style={{
+            backgroundColor: theme.colors.primary.x500,
+            borderRadius: '20px',
+            marginTop: '1rem'
+          }}
+        >
+   <Text  color={theme.colors.neutral.x000}>Remover imagens</Text>
+        </Button>
     
     <Box styleSheet={{alignSelf: 'center', marginTop: '4rem'}}>
     {messageThreeImage == 'Imagens cadastradas com sucesso.' && 

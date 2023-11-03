@@ -19,6 +19,7 @@ interface ButtonProps extends ButtonBaseProps{
   onSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
   type?:string;
   isLoading?: boolean;
+  disabled?: boolean;
 }
 
 export default function Button({

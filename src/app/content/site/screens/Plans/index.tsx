@@ -16,6 +16,7 @@ import { BoxInfo } from "./BoxInfo";
 import BuffetService from "@src/app/api/BuffetService";
 import { UserContext } from "@src/app/context/UserContext";
 import useFormatarMoeda from "@src/app/theme/helpers/useFormatarMoeda";
+import PagBankService from "@src/app/api/PagBankService";
 export default function Plans(){
 
   //hooks
@@ -27,6 +28,8 @@ export default function Plans(){
 
   //Datas
     const [dataPlans, setDataPlans] = useState([]);
+    const [planosPagBank, setPlanosPagBank] = useState([]);
+    const [planoSelecionadoPagBank, setPlanoSelecionadoPagBank] = useState('');
    
 
 
@@ -54,6 +57,15 @@ export default function Plans(){
       router.push('/checkout')
     }
     
+
+    useEffect(()=>{
+      PagBankService.getPlansPagBank()
+      .then(res=>{
+        setPlanosPagBank(res?.plans)
+      }).catch(err=>{
+        console.log(err)
+      })
+    }, [])
     
     
 

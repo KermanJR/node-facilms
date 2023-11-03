@@ -134,6 +134,26 @@ const Signatures = () =>{
                  
                 </Box>
                 )}
+
+{item.status === 'Pendente'  && (
+                  <Box tag="td"
+                  styleSheet={{
+                    padding: '.7rem',
+                    borderRadius: '10px',
+                    backgroundColor: theme.colors.secondary.x1100,
+                    color: theme.colors.secondary.x700
+                  }}    
+                >
+                  <Text styleSheet={{
+                       color: theme.colors.secondary.x700,
+                      textAlign: 'center'
+                    }}
+                  >
+                    Pendente
+                  </Text>
+                
+                </Box>
+                )}
                 
               </TableRow>
             ))}

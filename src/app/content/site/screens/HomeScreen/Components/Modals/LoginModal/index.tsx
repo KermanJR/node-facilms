@@ -1,7 +1,6 @@
 import { ModalContext } from "@src/app/context/ModalContext";
 import { useTheme } from "@src/app/theme/ThemeProvider";
 import Box from "@src/app/theme/components/Box/Box";
-import Button from "@src/app/theme/components/Button/Button";
 import Input from "@src/app/theme/components/Input/Input";
 import Link from "@src/app/theme/components/Link/Link";
 import Text from "@src/app/theme/components/Text/Text";
@@ -13,12 +12,14 @@ import GoogleLoginButton from "../../GoogleLoginButton";
 import BuffetService from "@src/app/api/BuffetService";
 import { UserContext } from "@src/app/context/UserContext";
 import { useRouter } from "next/router";
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function ModalLogin({ isOpen, onClose }) {
   const theme = useTheme();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     setEmail,
@@ -30,24 +31,14 @@ export default function ModalLogin({ isOpen, onClose }) {
     successLogin
   } = useContext(UserContext);
 
-  const {
-    isModalOpen,
-    closeModal,
-    isNovoModalOpen,
-    closeNovoModal,
-    closeBudgetModal,
-    isModalOpenBudget,
-    setIsNovoModalOpen
-  } = useContext(ModalContext)
-
 
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
-    setLoading(true)
+    setIsLoading(true)
     e.preventDefault();
     login();
-    setLoading(false)
+    setIsLoading(false)
   };
 
   useEffect(() => {
@@ -87,18 +78,27 @@ export default function ModalLogin({ isOpen, onClose }) {
           borderRadius: '1rem'
         }}
       >
-        <Button
+      
+      <Button
+          type="submit"
+          variant="contained"
           onClick={onClose}
-          fullWidth={false}
-          styleSheet={{
-            justifyContent: 'flex-end',
-            backgroundColor: theme.colors.primary.x700
+          
+          style={{
+            backgroundColor: theme.colors.secondary.x500,
+            borderRadius: '20px',
+            position: 'relative',
+            left: '0',
+            top: '0',
+            width: '20px',
+            height: '20px'
           }}
+          
         >
           X
-      </Button>
+        </Button>
       
-        <Box tag="form" styleSheet={{display: 'flex', flexDirection: 'column', gap: '1rem'}} onSubmit={handleSubmit}>
+        <Box tag="form" styleSheet={{display: 'flex', flexDirection: 'column', gap: '1rem', paddingTop: '2rem'}} onSubmit={handleSubmit}>
           <Box styleSheet={{textAlign: 'center', display: 'flex', flexDirection: 'row', alignSelf: 'center', padding: '0 2rem', gap: '.5rem'}}>
             <Text variant="heading5">Bem vindo de volta ao</Text>
             <Text variant="heading5semiBold">Busca Buffet</Text>
@@ -145,9 +145,19 @@ export default function ModalLogin({ isOpen, onClose }) {
               }}
             />
           </Box>
-          <Button fullWidth colorVariant="secondary" type="submit" isLoading={loading}>
-            Entrar
-          </Button>
+          <Button
+          type="submit"
+          variant="contained"
+          
+          disabled={isLoading}
+          style={{
+            backgroundColor: theme.colors.secondary.x500,
+            borderRadius: '20px'
+          }}
+          startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : null}
+        >
+          {isLoading ? <Text color={theme.colors.neutral.x000}>Entrando...</Text> : <Text  color={theme.colors.neutral.x000}>Entrar</Text>}
+        </Button>
           {errorLogin && (
             <Text color={theme.colors.negative.x700}>{errorLogin}</Text>
           )}

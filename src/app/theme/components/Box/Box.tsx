@@ -7,6 +7,7 @@ interface BoxProps {
   children?: React.ReactNode;
   styleSheet?: StyleSheet;
   className?: string;
+  disabled?: boolean;
   id?: string;
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   onSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;

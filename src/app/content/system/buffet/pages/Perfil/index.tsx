@@ -3,15 +3,15 @@ import { useTheme } from "@src/app/theme/ThemeProvider"
 import Box from "@src/app/theme/components/Box/Box"
 import InputDash from "@src/app/components/system/InputDash";
 import Text from "@src/app/theme/components/Text/Text";
-import Button from "@src/app/theme/components/Button/Button";
+
 import { use, useContext, useEffect, useState } from "react";
 import { UserContext } from "@src/app/context/UserContext";
 import BuffetService from "@src/app/api/BuffetService";
 import SelectWithClickToAddAttractives from "@src/app/components/system/SelectAttractives";
 import SelectWithClickToAddServices from "@src/app/components/system/SelectServices";
 import Icon from "@src/app/theme/components/Icon/Icon";
-import Select from "@src/app/theme/components/Select/Select";
-import Pagination from "@src/app/components/system/Pagination";
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const EditPerfil = () =>{
 
@@ -25,11 +25,14 @@ const EditPerfil = () =>{
   const [phoneBuffet, setPhoneBuffet] = useState<string>('');
   const [urlYoutube, setUrlYoutube] = useState<string>('');
   const [attractionsBuffets, setAttractionsBuffets] = useState<[]>([]);
+  const [securityBuffets, setSecurityBuffets] = useState<[]>([]);
   const [servicesBuffets, setServicesBuffets] = useState<[]>([]);
-
+  const [youtube, setYoutube] = useState('')
+  const [isLoading, setIsLoading] = useState(false);
 
   const [auxAttractiveBuffets, setAuxAttractivesBuffet] = useState([]);
   const [auxServicesBuffets, setAuxServicesBuffet] = useState([]);
+  const [auxSecurityBuffets, setAuxSecurityBuffet] = useState([]);
 
 
   const [detailsBuffet, setDetailsBuffet] = useState([]);
@@ -114,6 +117,20 @@ const EditPerfil = () =>{
   })
   .filter((attraction) => attraction !== null);
 
+  let selectedSecurityBuffet = detailsBuffet
+  .map((userAttraction) => {
+    const matchingAttraction = securityBuffets.find(
+      (attraction) => attraction?.['id'] === userAttraction?.['id_seguranca']
+    );
+    return matchingAttraction
+      ? {
+          value: matchingAttraction?.['id'],
+          label: matchingAttraction?.['nome']
+        }
+      : null;
+  })
+  .filter((attraction) => attraction !== null);
+
 
 
   let selectedServicesBuffet: any = detailsBuffet
@@ -136,7 +153,7 @@ const EditPerfil = () =>{
   async function CreateDetailsBuffet(id){
     await BuffetService.deleteAttractionsServicesBuffets(idBuffet)
       .then((response) => {
-        
+        console.log(response)
       })
       .catch((error) => {
         console.log(error);
@@ -148,13 +165,19 @@ const EditPerfil = () =>{
       id_atracao: null,
     }))
 
+    let securityArray = auxSecurityBuffets.map((security) => ({
+      id_buffet:  id,
+      id_seguranca: security?.value,
+      id_atracao: null,
+    }))
+
     let attractivesArray = auxAttractiveBuffets.map((attractive) => ({
       id_buffet: id,
       id_servico: null,
       id_atracao: attractive?.value,
     }));
 
-    let combinedArray = [...servicesArray, ...attractivesArray];
+    let combinedArray = [...servicesArray, ...attractivesArray, ...securityArray];
 
 
     await BuffetService.postAttractionsServicesBuffets({
@@ -240,7 +263,7 @@ const EditPerfil = () =>{
   //CRIAR BUFFET
   function CreateBuffet(e: any){
     e.preventDefault();
-    setLoading(true);
+    setIsLoading(true);
     BuffetService.createBuffets({
       id_entidade: dataUser['entidade']?.id,
       slug: slug,
@@ -249,6 +272,8 @@ const EditPerfil = () =>{
       sobre: aboutBuffet,
       horario_atendimento: hoursWeek,
       horario_atendimento_fds: hoursWeekend,
+      youtube: youtube,
+      status: 'I',
       redes_sociais: [
         {
             "descricao": "https://www.youtube.com/",
@@ -270,6 +295,7 @@ const EditPerfil = () =>{
       setMessage('Erro ao salvar dados, tente novamente.');
       console.log(error)
     })
+    setIsLoading(false);
   }
 
   async function CreateCategoryBuffet(id){
@@ -289,7 +315,7 @@ const EditPerfil = () =>{
   //EDITAR BUFFET
   function EditBuffet(e: any){
     e.preventDefault();
-    setLoading(true);
+    setIsLoading(true);
     BuffetService.editBuffets(idBuffet, {
       slug: slug,
       capacidade_total: capacityTotalBuffet,
@@ -297,6 +323,9 @@ const EditPerfil = () =>{
       sobre: aboutBuffet,
       horario_atendimento: hoursWeek,
       horario_atendimento_fds: hoursWeekend,
+      youtube: youtube,
+      status: 'A',
+      
       redes_sociais: [
         {
             "descricao": "https://www.youtube.com/",
@@ -323,6 +352,7 @@ const EditPerfil = () =>{
       setMessage('Erro ao salvar dados, tente novamente');
       console.log(error)
     })
+    setIsLoading(false);
   }
 
 
@@ -354,6 +384,7 @@ const EditPerfil = () =>{
         setIdAddress(response?.entidade?.enderecos[0].endereco.id);
         setTypeSignatue(response?.entidade?.assinaturas[0]?.plano?.nome);
         setSelectedCategoria(response?.categorias[0]?.categoria?.id)
+        setYoutube(response?.youtube)
         if(response?.entidade?.enderecos.length > 0){
           setModeAddress('edit')
         }
@@ -387,6 +418,17 @@ const EditPerfil = () =>{
     })
     .catch((error) => {
       console.error('Erro ao buscar serviços para os Buffets:', error);
+    });
+  }
+
+  //RETORNA OS SERVIÇOS FIXOS CADASTRADOS NO BANCO DE DADOS
+  function showSecurityBuffets(){
+    BuffetService.showSecurityBuffets()
+    .then((response) => {
+      setSecurityBuffets(response);
+    })
+    .catch((error) => {
+      console.error('Erro ao buscar items de segurança para os Buffets:', error);
     });
   }
 
@@ -492,6 +534,7 @@ const EditPerfil = () =>{
     GetBuffetById();
     showAttractionsBuffets();
     showServicesBuffets();
+    showSecurityBuffets();
     showStateBd();
 
     BuffetService.getCategoriasBuffet()
@@ -532,7 +575,7 @@ const EditPerfil = () =>{
     }).catch(err=>{
       console.log(err)
     })
-  }, [cep.length === 8])
+  }, [cep?.length === 8])
 
 
   
@@ -682,13 +725,13 @@ const EditPerfil = () =>{
         {typeSignature === 'Premium'? 
         <Box>
           <Text>URL Youtube</Text>
-          <InputDash placeholder="Digite a URL do seu site" type="text"  onChange={(e)=>setUrlYoutube(e)} />
+          <InputDash placeholder="Digite a URL do youtube" type="text"  value={youtube} onChange={(e)=>setYoutube(e)} />
         </Box>: ''
         }
         
      </Box>
 
-     <Box styleSheet={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', padding: '1rem 0 1rem 0'}}>
+     <Box styleSheet={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '2rem', padding: '1rem 0 1rem 0'}}>
      <Box>
         <Text variant="heading4Bold" color={theme.colors.neutral.x999} styleSheet={{padding: '1rem 0'}}>Atrações</Text>
         <SelectWithClickToAddAttractives 
@@ -703,6 +746,14 @@ const EditPerfil = () =>{
           options={servicesBuffets}
           selectedServicesBuffet={selectedServicesBuffet}
           setAuxServicesBuffets = {setAuxServicesBuffet}
+        />
+      </Box>
+      <Box>
+        <Text variant="heading4Bold" color={theme.colors.neutral.x999} styleSheet={{padding: '1rem 0'}}>Segurança</Text>
+        <SelectWithClickToAddServices
+          options={securityBuffets}
+          selectedServicesBuffet={selectedSecurityBuffet}
+          setAuxServicesBuffets = {setAuxSecurityBuffet}
         />
       </Box>
 
@@ -726,7 +777,21 @@ const EditPerfil = () =>{
         justifyContent: 'left',
         alignItems: 'center'
       }}>
-        <Button colorVariant="secondary" styleSheet={{width: '115px', marginTop: '1rem'}} type="submit">Salvar</Button>
+        <Button
+          type="submit"
+          variant="contained"
+          
+          disabled={isLoading}
+          style={{
+            backgroundColor: theme.colors.secondary.x500,
+            borderRadius: '20px',
+            marginTop: '1rem',
+            textDecoration: 'capitalize'
+          }}
+          startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : null}
+        >
+          {isLoading ? <Text color={theme.colors.neutral.x000}>Salvando...</Text> : <Text  color={theme.colors.neutral.x000}>Salvar</Text>}
+        </Button>
         {
           message && <Text styleSheet={{
             color: message === 'Dados salvos com sucesso.'? theme.colors.positive.x700 : theme.colors.negative.x800, marginTop: '1rem'

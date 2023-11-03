@@ -33,6 +33,7 @@ export default function SinglePageBuffet(){
   
     const [attractions, setAttractions] = useState([])
     const [services, setServices] = useState([])
+    const [securities, setSecurities] = useState([])
     const [details, setDetails] = useState([]);
     const [cep, setCep] = useState();
     const [coordinates, setCoordinates] = useState([]);
@@ -50,9 +51,6 @@ export default function SinglePageBuffet(){
     };
   
   
-    
-  
-
     const {
       isModalOpen,
       closeModal,
@@ -92,6 +90,7 @@ export default function SinglePageBuffet(){
     useEffect(() => {
       BuffetService.showBuffetById(idBuffet ? idBuffet : JSON.parse(localStorage.getItem('ID_BUFFET')))
         .then((response) => {
+
           setDetails(response)
           const attractionPromises = response?.detalhes
             .filter((item) => item.id_atracao !== null)
@@ -100,11 +99,24 @@ export default function SinglePageBuffet(){
           const servicePromises = response?.detalhes
             .filter((item) => item.id_servico !== null)
             .map((item) => BuffetService.getServicesBuffetsById(item?.id_servico));
+
+            const securityPromises = response?.detalhes
+            .filter((item) => item.id_seguranca !== null)
+            .map((item) => BuffetService.getSecuritiesBuffetsById(item?.id_seguranca));
     
           Promise.all(attractionPromises)
             .then((attractionResponses) => {
               const attractions = attractionResponses.map((response) => response?.nome);
               setAttractions(attractions);
+            })
+            .catch((attractionError) => {
+              console.error('Erro ao buscar atrações:', attractionError);
+            });
+
+            Promise.all(securityPromises)
+            .then((securityResponses) => {
+              const securities = securityResponses.map((response) => response?.nome);
+              setSecurities(securities);
             })
             .catch((attractionError) => {
               console.error('Erro ao buscar atrações:', attractionError);
@@ -136,7 +148,7 @@ export default function SinglePageBuffet(){
 
 
     return(
-        <Box tag="section" styleSheet={{width: 'fit-content'}}>
+        <Box tag="section" styleSheet={{width: '100%'}}>
           {details ? <Banner data={details}/> : <></>}
           
           {/* Novo modal que será aberto */}
@@ -217,13 +229,44 @@ export default function SinglePageBuffet(){
                     </Text>
                     <Box tag="div" 
                       styleSheet={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                        gap: '1rem',
+                        marginTop: '3rem'
+                      }}
+                    >
+                      {services?.map((nome, index)=>{
+                          return(
+                              <Box styleSheet={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.5rem', padding: '1rem 0'}}>
+                                <Image src={IconCheckTemplate.src} alt=""/>
+                                <Text styleSheet={{wordWrap: 'break-word'}} variant="btnRegular">{nome}</Text>
+                              </Box>
+                          )
+                      })
+                      }
+                    </Box>
+                  </Box>
+
+                  {/*Segurança*/}
+                  <Box tag="div">
+                    <Text tag="h3" variant="heading3semiBold" 
+                      styleSheet={{
+                        padding: '1rem 0',
+                        borderBottom: `1px solid ${theme.colors.neutral.x100}`,
+                        marginTop: '3rem'
+                      }}>
+                        Segurança
+                    </Text>
+                    <Box tag="div" 
+                      styleSheet={{
                         display: 'grid',
                         gridTemplateColumns: !(size < 450) ? 'repeat(4, 1fr)' : (!(size < 350) ? 'repeat(3, 1fr)' : 'repeat(2, 1fr)'),    
                         gap: '1rem',
                         marginTop: '3rem'
                       }}
                     >
-                      {services?.map((nome, index)=>{
+                      {securities?.map((nome, index)=>{
                           return(
                               <Box styleSheet={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.5rem', padding: '1rem 0'}}>
                                 <Image src={IconCheckTemplate.src} alt=""/>
@@ -346,7 +389,7 @@ export default function SinglePageBuffet(){
                         </Box>
                         <Box>
                           <Text variant={!(size < 500) ? 'heading5Bold' : 'heading6Bold'} >Telefone</Text>
-                          <Text styleSheet={{color: theme.colors.neutral.x999}} variant="btnRegular">{formatarTelefone(details?.['entidade']?.enderecos[0].telefone)}</Text>
+                          <Text styleSheet={{color: theme.colors.neutral.x999}} variant="btnRegular">{formatarTelefone(details?.['entidade']?.enderecos[0]?.telefone)}</Text>
                         </Box>
                       </Box>
 
@@ -416,10 +459,8 @@ export default function SinglePageBuffet(){
                         </Text>
                     
                       <Box tag="div" className="video" styleSheet={{height: '350px', marginTop: '1rem', borderRadius: '12px'}}>
-                      <video width="640" height="360" controls>
-                        <source src="seu_video.mp4" type="video/mp4" />
-                        Seu navegador não suporta o elemento de vídeo.
-                      </video>
+                      <iframe width="640" height="360" src={details?.['youtube']}  allowFullScreen></iframe>
+
                       </Box>
                     </Box>: ''
                   }
@@ -428,7 +469,7 @@ export default function SinglePageBuffet(){
 
 
               {/*Buffets Relacionados*/}
-              <Box tag="div" styleSheet={{height: 'auto', backgroundColor: theme.colors.neutral.x050, borderRadius:'8px', padding: '2rem'}}>
+              <Box tag="div" styleSheet={{height: 'auto', backgroundColor: '#F5F2F2', borderRadius:'8px', padding: '2rem'}}>
                 <MapModal isOpen={isMapModalOpen} onRequestClose={closeMapModal} coordinates={coordinates}/>
                 <Text styleSheet={{
                   padding: '2rem',

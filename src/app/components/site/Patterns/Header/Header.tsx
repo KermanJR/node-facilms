@@ -18,7 +18,6 @@ import { BiLogOutCircle } from "react-icons/bi";
 
 export default function Header(){
 
-  const [username, setUsername] = useState('');
   let pathname;
 
   const theme = useTheme();
@@ -62,7 +61,6 @@ export default function Header(){
     id = JSON.parse(window.localStorage.getItem('USER_ID'))
   }
 
-  
   useEffect(()=>{
     BuffetService.showOneUser(id)
     .then(res=>{
@@ -122,10 +120,11 @@ export default function Header(){
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: !(size <= 1200) ? 'flex-end' : 'center',
+          justifyContent: !(size <= 1200) ? 'center' : 'center',
           gap: !(size <= 1200) ? '6.5vw' : '3vw'
         }}
       >
+        <Box><Link href="/" variant="heading6semiBold" styleSheet={{fontSize: !(size <= 1200) ? '1rem' : '0.8rem'}}>Home</Link></Box>
         <Box><Link href="/busca" variant="heading6semiBold" styleSheet={{fontSize: !(size <= 1200) ? '1rem' : '0.8rem'}}>Buffets</Link></Box>
         <Box><Link href="/orcamento-por-regiao" variant="heading6semiBold" styleSheet={{fontSize: !(size <= 1200) ? '1rem' : '0.8rem'}}>Orçamento por Região</Link></Box>
         <Box><Link href="/contato" variant="heading6semiBold" styleSheet={{fontSize: !(size <= 1200) ? '1rem' : '0.8rem'}}>Contato</Link></Box>
@@ -221,6 +220,7 @@ export default function Header(){
             gap: '1rem',
             padding: '1rem'
           }}>
+            <Link href="/Home">Home</Link>
             <Link href="/busca">Buffets</Link>
             <Link href="/orcamento-por-regiao">Orçamento por Região</Link>
             <Link href="/contato">Contato</Link>

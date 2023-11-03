@@ -32,14 +32,27 @@ export default class BuffetService {
     static autoLogin() {
       throw new Error("Method not implemented.");
     }
+  
+
     static async createUser(data: {
-        nome: string,
-        documento: string,
-        email: string,
-        password: string,
-    }): Promise<any> {
-        const url = `${API_URL_BUSCABUFFET}/usuarios`;
-        return await HTTP.request('POST', url, data);
+      nome: string,
+      documento: string,
+      email: string,
+      password: string,
+  }): Promise<any> {
+      const url = `${API_URL_BUSCABUFFET}/usuarios`;
+      const bearerToken = localStorage.getItem('USER_TOKEN');
+      try {
+        const response = await axios.post(url, data, {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        });
+    
+        return response.data;
+      } catch (error) {
+        return error?.response?.data?.error
+      }
     }
 
     static async loginUser(data: {
@@ -217,6 +230,8 @@ export default class BuffetService {
         horario_atendimento: string,
         horario_atendimento_fds: string,
         sobre: string,
+        youtube: string,
+        status: string,
         redes_sociais: {
           descricao: string,
           tipo: string
@@ -247,6 +262,10 @@ export default class BuffetService {
         horario_atendimento: string,
         horario_atendimento_fds: string,
         sobre: string,
+        youtube: string,
+        status: string,
+        data_cadastro?: any,
+        data_fim?: any,
         redes_sociais: {
           descricao: string,
           tipo: string
@@ -320,6 +339,24 @@ export default class BuffetService {
         throw error;
       }
     }
+
+    static async getSecuritiesBuffetsById(id: number): Promise<any> {
+      const url = `${API_URL_BUSCABUFFET}/segurancas/${id}`;
+      const bearerToken = localStorage.getItem('USER_TOKEN');
+      try {
+        const response = await axios.get(url,{
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        });
+    
+        return response.data;
+      } catch (error) {
+        console.error('Erro ao editar atrações e serviçoes do buffet:', error);
+        throw error;
+      }
+    }
+
 
     static async getAttractionsBuffetsById(id: number): Promise<any> {
       const url = `${API_URL_BUSCABUFFET}/atracoes/${id}`;
@@ -504,6 +541,23 @@ export default class BuffetService {
       }
     }
 
+    static async showSecurityBuffets(): Promise<any> {
+      const url = `${API_URL_BUSCABUFFET}/segurancas`;
+      const bearerToken = localStorage.getItem('USER_TOKEN');
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        });
+    
+        return response.data;
+      } catch (error) {
+        console.error('Erro ao buscar serviços do usuário:', error);
+        throw error;
+      }
+    }
+
 
     //Cupons///////////////////////////////////////////////////////////////////
   
@@ -657,6 +711,24 @@ export default class BuffetService {
       throw error;
     }
   }
+
+  static async showSignaturesById(id): Promise<any> {
+    const url = `${API_URL_BUSCABUFFET}/assinaturas/${id}`;
+    const bearerToken = localStorage.getItem('USER_TOKEN');
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      });
+  
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao buscar quantidade de assinaturas:', error);
+      throw error;
+    }
+  }
+ 
  
 
   static async totalUsers(): Promise<any> {

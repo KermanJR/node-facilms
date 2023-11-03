@@ -212,21 +212,55 @@ const EditPerfil = () =>{
     }} onSubmit={handleSubmitCreate}>
       <Text styleSheet={{fontSize: '1.2rem', padding: '1rem 0', color: 'black'}}> Meus Dados</Text>
      <Box styleSheet={{display: 'grid',gridTemplateColumns: '3fr 1fr 2fr 2fr', gap: '2rem'}}>
+      <Box>
+        <Text>E-mail</Text>
         <InputDash placeholder="E-mail" type="text"  defaultValue={dataUser['usuario']?.email} disabled={true} onChange={(e)=>setEmail(e)}/>
+      </Box>
+      <Box>
+        <Text>Nome</Text>
         <InputDash placeholder="Nome" type="text" value={nome} onChange={(e)=>setNome(e)}/>
+      </Box>
+       
+       
      </Box>
 
      <Text styleSheet={{fontSize: '1.2rem', padding: '1rem 0', color: 'black', marginTop: '1rem'}}> Endereço</Text>
      <Box styleSheet={{display: 'grid',gridTemplateColumns: '3fr 1fr 2fr 2fr', gap: '2rem'}}>
-        <InputDash placeholder="CEP" type="text"  onChange={(e)=>setCep(e)} value={cep}/>
+     <Box>
+        <Text>CEP</Text>
+        <InputDash placeholder="Digite seu CEP" type="text"  onChange={(e)=>setCep(e)} value={cep}/>
+      </Box>
+      <Box>
+        <Text>Cidade</Text>
         <InputDash placeholder="Cidade" type="text" onChange={(e)=>setCidade(e)} value={cidade} disabled={true}/>
+      </Box>
+      <Box>
+        <Text>Estado (UF)</Text>
         <InputDash placeholder="Estado" type="text" onChange={(e)=>setEstado(e)} value={estado} disabled={true}/>
+      </Box>
+       
+       
+       
+        
      </Box>
 
      <Box styleSheet={{display: 'grid', gridTemplateColumns: '3fr 1fr 2fr 2fr', gap: '2rem', padding: '2rem 0 2rem 0'}}>
+        
+     <Box>
+        <Text>Rua</Text>
         <InputDash placeholder="Rua" type="text" value={rua} disabled={true}/>
+      </Box>
+      <Box>
+        <Text>Nº</Text>
         <InputDash placeholder="N°" type="text" value={numero} onChange={(e)=>setNumero(e)} required={true}/>
+      </Box>
+      <Box>
+        <Text>Complemento</Text>
         <InputDash placeholder="Complemento" type="text" value={complemento} onChange={(e)=>setComplemento(e)}/>
+      </Box>
+      
+        
+       
      </Box>
 
 

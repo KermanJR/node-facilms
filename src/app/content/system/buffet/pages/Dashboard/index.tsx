@@ -17,19 +17,26 @@ import Pagination from "@src/app/components/system/Pagination";
 import { useContext, useEffect, useState } from "react";
 import BuffetService from "@src/app/api/BuffetService";
 
-import moment from 'moment-timezone';
+
 import Link from "next/link";
 import { UserContext } from "@src/app/context/UserContext";
 import ActivePageContext from "@src/app/context/ActivePageContext";
 import { useFilterFunctions } from "../../../admin/screens/pages/common/useFilterFunctions";
 import { FilterArrows } from "../../../admin/screens/pages/common/FilterArrows";
-
+import { differenceInCalendarDays, differenceInDays, isAfter, parseISO } from "date-fns";
+import PagBankService from "@src/app/api/PagBankService";
+import format from "date-fns/format";
+import moment from "moment";
 
 const Homedash = () =>{  
 
   const {
     setIdEvent,
-    dataUser
+    dataUser,
+    dataBuffet,
+    setDataBuffet,
+    idBuffet,
+    setIdBuffet
   } = useContext(UserContext);
   
   const theme = useTheme();
@@ -38,7 +45,12 @@ const Homedash = () =>{
   const [currentPage, setCurrentPage] = useState(1);
   const elementsPerPage = 5; // Define o número de elementos por página
 
+  const [diasRestantes, setDiasRestantes] = useState(null);
+  const [dataCadastro, setDataCadastro] = useState(null);
+  const [dataFim, setDataFim] = useState(null);
 
+  const [statusBuffet, setStatusBuffet] = useState('I');
+  const [valorPlanoBasico, setValorPlanoBasico] = useState(null);
   
   const {
     orderByGrowing,
@@ -86,6 +98,7 @@ const Homedash = () =>{
     }
   }, [dataUser?.['entidade']?.id])
 
+
   useEffect(()=>{
     if(dataUser?.['entidade']?.id){
       BuffetService.showBudgetsByIdEntity(dataUser?.['entidade']?.id)
@@ -96,7 +109,106 @@ const Homedash = () =>{
       })
     }
   }, [dataUser?.['entidade']?.id])
+
+  useEffect(()=>{
+    BuffetService.showBuffetByIdEntity(dataUser?.['entidade']?.id)
+    .then(res=>{
+      console.log(res)
+      setDataCadastro(res?.data_cadastro);
+      setDataFim(res?.data_fim)
+      setIdBuffet(res?.id)
+      setStatusBuffet(res?.status)
+      setDataBuffet(res)
+    }).catch(err=>{
+      console.log(err)
+    })
+  }, [dataUser?.['entidade']?.id])
+
+
+
+  //EDITAR BUFFET
+  function EditBuffet(){
+    BuffetService.editBuffets(idBuffet, {
+      slug: dataBuffet?.['slug'],
+      capacidade_total: dataBuffet?.['capacidade_total'],
+      area_total: dataBuffet?.['area_total'],
+      sobre: dataBuffet?.['sobre'],
+      horario_atendimento: dataBuffet?.['horario_atendimento'],
+      horario_atendimento_fds: dataBuffet?.['horario_atendimento_fds'],
+      youtube: dataBuffet?.['youtube'],
+      status: 'P',
+      redes_sociais: [
+        {
+            "descricao": "https://www.youtube.com/",
+            "tipo":  dataBuffet?.['youtube'] ? dataBuffet?.['youtube']:'Nenhum'
+        }
+      ]
+    })
+    .then(async (response)=>{
+      console.log(response)
+    }).catch((error)=>{
+      console.log(error)
+    })
+  }
+
+
+  async function editSignatureBuffet(){
+    const data = {
+      "tipo": `PLAN_3571D956-D88B-485C-89EC-18CA89CF0C1C`,
+      "status": 'Pendente',
+      "valor": valorPlanoBasico,
+      "desconto": 1.22,
+      "id_plano": 1,
+      "id_entidade": dataBuffet['entidade']?.id
+  }
+    PagBankService.editSignatureInBuffet(data, dataBuffet['entidade']['assinaturas'][0]?.id)
+      .then(res=>{
+        console.log(res)
+      }).catch(err=>{
+        console.log(err)
+      })
+  }
+
+
   
+
+  useEffect(()=>{
+    BuffetService.showPlans()
+    .then(res=>{
+      setValorPlanoBasico(res[0].valor_mensal)
+    })
+  }, [])
+
+
+  
+
+  function contaDiasRestantes(){
+    const dataAtual = moment().format();
+    let dias = moment(dataFim).diff(dataAtual, "days");
+    if(!Number.isNaN(dias) && dias != 0){
+      setDiasRestantes(dias)
+    }else if(dias == 0){
+      setDiasRestantes(0)
+      editSignatureBuffet();
+      EditBuffet()
+    }
+    
+  }
+
+  setInterval(()=>{
+    if(dataFim != null && dataFim != undefined){
+      contaDiasRestantes()
+    }
+  }, 10000)
+
+  useEffect(()=>{
+    contaDiasRestantes()
+  }, [dataFim != null && dataFim != undefined])
+ 
+ 
+
+ 
+
 
   return(
     <Box styleSheet={{height: 'auto'}}>
@@ -147,10 +259,62 @@ const Homedash = () =>{
           }}>
             <Image src={DolarYellowImage.src} alt="Ícone de arquivo"/>
           </Box>
-          <Box styleSheet={{width: '90%'}}>
+
+          {statusBuffet === 'A' && dataBuffet?.['galerias']?.length > 0 &&(
+            <Box styleSheet={{width: '90%'}}>
             <Text variant="heading3Bold" tag="p" color={theme.colors.neutral.x000}>Aviso</Text>
-            <Text tag="p" color={theme.colors.neutral.x000} styleSheet={{width: '70%'}}>Não perca a oportunidade de continuar desfrutando de todos os benefícios! Renove sua assinatura.</Text>
+            <p  style={{width: '80%', fontFamily: `'Poppins', 'sans-serif'`, color: "white"}}>
+              Restam <label style={{display: 'inline-block',fontWeight: 'bold', color: theme.colors.primary.x500}}> 
+              {diasRestantes > 0 ? (
+                diasRestantes > 0 ? (
+                diasRestantes
+                ) : (
+                <p> Não perca a oportunidade de continuar desfrutando de todos os benefícios! 
+                  Assine em <label style={{display: 'inline-block'}}><a href="http://localhost:3000/planos" style={{color: theme.colors.primary.x500, fontWeight: '600'}}>buscabuffet.com.br/planos</a></label>
+                </p>
+                )
+              ) : (
+                0
+              )}
+               </label> dias para continuar aproveitando sua avaliação gratuita.
+              Não perca a oportunidade de continuar desfrutando de todos os benefícios! 
+              Assine em <label style={{display: 'inline-block'}}><a href="http://localhost:3000/planos" style={{color: theme.colors.primary.x500, fontWeight: '600'}}>buscabuffet.com.br/planos</a></label>
+            </p>
           </Box>
+          )}
+
+{statusBuffet === 'A' && dataBuffet?.['galerias']?.length == 0 &&(
+            <Box styleSheet={{width: '70%'}}>
+            <Text variant="heading3Bold" tag="p" color={theme.colors.neutral.x000}>Aviso</Text>
+            <Text color={theme.colors.neutral.x000}>Por favor, insira as imagens do seu Buffet para ativá-lo e 
+              torna-lo visível ao público.
+            </Text>
+         
+          </Box>
+          )}
+
+        {statusBuffet === 'I' && (
+            <Box styleSheet={{width: '70%'}}>
+            <Text variant="heading3Bold" tag="p" color={theme.colors.neutral.x000}>Aviso</Text>
+            <Text color={theme.colors.neutral.x000}>Por favor, preencha as informações e insira as imagens do seu Buffet para ativá-lo e 
+              torna-lo visível ao público.
+            </Text>
+         
+          </Box>
+          )}
+
+          {statusBuffet === 'P' && (
+            <Box styleSheet={{width: '70%'}}>
+            <Text variant="heading3Bold" tag="p" color={theme.colors.neutral.x000}>Aviso</Text>
+            <p style={{width: '90%', fontFamily: `'Poppins', 'sans-serif'`, color: "white"}}> 
+                Seus dias de avaliação acabaram, não perca a oportunidade de continuar desfrutando de todos os benefícios! 
+                Assine em <label style={{display: 'inline-block'}}><a href="http://localhost:3000/planos" style={{color: theme.colors.primary.x500, fontWeight: '600'}}>buscabuffet.com.br/planos</a></label>
+            </p>
+           
+         
+          </Box>
+          )}
+          
         </BoxDash>
       </Box>
 

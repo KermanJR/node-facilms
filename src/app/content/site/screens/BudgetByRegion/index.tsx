@@ -5,18 +5,25 @@ import Text from "@src/app/theme/components/Text/Text";
 import Icon from "@src/app/theme/components/Icon/Icon";
 import useResponsive from "@src/app/theme/helpers/useResponsive";
 import BannerAnotherPages from '../../../../../../public/assets/images/banner_another_pages.webp';
-import Button from "@src/app/theme/components/Button/Button";
+
 import Input from "@src/app/theme/components/Input/Input";
 import { ModalContext } from "@src/app/context/ModalContext";
 import ModalRegister from "../HomeScreen/Components/Modals/RegisterModal";
 import ModalLogin from "../HomeScreen/Components/Modals/LoginModal";
+import ModalBudgetClient from "../HomeScreen/Components/Modals/ModalLoginCliente";
 import useSize from "@src/app/theme/helpers/useSize";
 import InputDash from "@src/app/components/system/InputDash";
 import Select from "@src/app/theme/components/Select/Select";
 import ModalBudget from "../HomeScreen/Components/Modals/BudgetModal";
 import BuffetService from "@src/app/api/BuffetService";
 import { UserContext } from "@src/app/context/UserContext";
-
+import {BsCheckCircle} from 'react-icons/bs'
+import {AiOutlineCloseCircle} from 'react-icons/ai'
+import Close from '../../../../../../public/assets/images/close.png'
+import Correct from '../../../../../../public/assets/images/correct.png'
+import Image from "@src/app/theme/components/Image/Image";
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 export default function BudgetByRegion(){
 
   
@@ -45,7 +52,7 @@ export default function BudgetByRegion(){
 
      const [error, setError] = useState('');
 
-    
+      const [isLoading, setIsLoading] = useState(false);
   
 
     
@@ -141,6 +148,121 @@ export default function BudgetByRegion(){
       setLoadingCity(false)
     };
 
+
+      
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+    const [showNegationModal, setShowNegationModal] = useState(false);
+    function ConfirmationModal() {
+      return (
+        <Box
+          styleSheet={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)', // Sobreposição escura
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 999, // Garanta que esteja na parte superior
+          }}
+        >
+          <Box styleSheet={{
+            backgroundColor: 'white',
+            borderRadius: '8px',
+            height: '300px',
+            width: '50%'
+          }}>
+
+         <Button
+          type="submit"
+          variant="contained"
+          onClick={(e)=>setShowConfirmationModal(!showConfirmationModal)}
+          disabled={isLoading}
+          style={{
+            width: '20px',
+            height: '20px',
+            border: 'none',
+            textAlign: 'left',
+            cursor: 'pointer',
+            background: theme.colors.secondary.x500,
+            marginLeft: '1rem',
+            marginTop: '1rem',
+            borderRadius: '20px',
+          }}
+        
+        >
+          X
+        </Button>
+        
+         <Text variant="heading5" color="green" styleSheet={{display:' flex', flexDirection: 'row', height: '60%',justifyContent: 'center', alignItems: 'center', marginTop: '-1rem'}}>
+           {dataUser['entidade']?.nome}, orçamento enviado com sucesso!
+         </Text>
+         <Image src={Correct.src} alt="" styleSheet={{width: '70px', textAlign: 'center', alignSelf: 'center', marginTop: '-2rem'}}/>
+         </Box>
+          </Box>
+        
+      );
+    }
+    function NegationModal() {
+      return (
+        <Box
+          styleSheet={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)', // Sobreposição escura
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 999, // Garanta que esteja na parte superior
+          }}
+        >
+           <Box styleSheet={{
+            backgroundColor: 'white',
+            borderRadius: '8px',
+            height: '300px',
+            width: '50%'
+          }}>
+
+              
+
+<Button
+          type="submit"
+          variant="contained"
+          onClick={(e)=>setShowNegationModal(!showNegationModal)}
+          disabled={isLoading}
+          style={{
+            width: '20px',
+            height: '20px',
+            border: 'none',
+            textAlign: 'left',
+            cursor: 'pointer',
+            background: theme.colors.secondary.x500,
+            marginLeft: '1rem',
+            marginTop: '1rem',
+            borderRadius: '20px',
+          }}
+        
+        >
+          X
+        </Button>
+           
+            <Text variant="heading5" color="red" styleSheet={{display:' flex', flexDirection: 'row', height: '60%',justifyContent: 'center', alignItems: 'center',  marginTop: '-2rem'}}>
+              Não há buffets cadastrados nessa região.
+            </Text>
+            <Image src={Close.src} alt="" styleSheet={{width: '70px', textAlign: 'center', alignSelf: 'center', marginTop: '-2rem'}}/>
+          
+          </Box>
+        </Box>
+      );
+    }
+    
+    
+
     
 
     useEffect(() => {
@@ -175,12 +297,11 @@ export default function BudgetByRegion(){
     useEffect(() => {
       BuffetService.showBuffets()
         .then(res => {
+         
           if(idCidade){
             res.map((item, index)=>{
-              if(item.entidade.enderecos[0].endereco.cidade.id == idCidade){
+              if(item?.entidade?.enderecos[0]?.endereco?.cidade?.id == idCidade){
                 idsCidadesIguais.push(item.id_entidade)
-              }else{
-                
               }
             })
           }
@@ -192,6 +313,9 @@ export default function BudgetByRegion(){
           if (!idsCidadesIguais.includes(dataUser['entidade']?.id)) {
             idsCidadesIguais.unshift(dataUser['entidade']?.id);
           }
+
+       
+
           setCidadesIguais(idsCidadesIguais)
 
       
@@ -200,58 +324,43 @@ export default function BudgetByRegion(){
     
 
 
+   
 
    function handleSubmit(e){
+    setIsLoading(true)
       e.preventDefault()
       if(dataUser['usuario']?.id_perfil == 3){
-        cidadesIguais.length > 1 && cidadesIguais.map((item, index)=>{
-          let data = {
-            "nome": nome,
-            "observacoes":observacoes,
-            "qtd_pessoas": qtdPessoas,
-            "tipo": tipo,
-            "status": String(cidadesIguais[0]),
-            "id_entidade": item,
-            "periodo": periodo,
-            "id_cidade": idCidade,
-            "bairro": bairro,
-            "data_do_evento": `${dataDoEvento} 00:00:00`
-          }
-          BuffetService.sendEvento(data)
-          .then(async res=>{
-            console.log(res)
-            await sendEmailToBuffet();
-          }).catch(err=>{
-            console.log(err)
+        if(cidadesIguais.length > 1){
+            cidadesIguais.map((item, index)=>{
+            let data = {
+              "nome": nome,
+              "observacoes": observacoes,
+              "qtd_pessoas": Number(qtdPessoas),
+              "tipo": tipo,
+              "status": String(cidadesIguais[0]),
+              "id_entidade": item,
+              "periodo": periodo,
+              "id_cidade": Number(idCidade),
+              "bairro": bairro,
+              "data_do_evento": `${dataDoEvento} 00:00:00`
+            }
+            BuffetService.sendEvento(data)
+            .then(async res=>{
+              setShowConfirmationModal(true);
+            }).catch(err=>{
+              console.log(err)
+            })
           })
-        })
+        }else{
+          setShowNegationModal(true)
+        }
         
       }else{
         setError('Faça Login como cliente para enviar orçamentos.')
       }
-    }
 
+        setIsLoading(false)
 
-    async function sendEmailToBuffet(){
-      cidadesIguais?.map((item, index)=>{
-        let data ={
-          id_entidade: item,
-          data: {
-            "nome": nome,
-            "observacoes":observacoes,
-            "qtd_pessoas": qtdPessoas,
-            "tipo": tipo,
-            "status": String(cidadesIguais[0]),
-            "id_entidade": item,
-            "periodo": periodo,
-            "id_cidade": idCidade,
-            "bairro": bairro,
-            "data_do_evento": `${dataDoEvento} 00:00:00`
-          }
-        }
-        
-      })
-      
     }
 
     
@@ -278,7 +387,7 @@ export default function BudgetByRegion(){
       }
     }, [error]);
   
-   
+ 
 
   
     return(
@@ -288,6 +397,9 @@ export default function BudgetByRegion(){
           margin: '0 auto'
         }}
         >
+          {showConfirmationModal && <ConfirmationModal />}
+          {showNegationModal && <NegationModal />}
+
 
           {/* Novo modal que será aberto */}
           {isNovoModalOpen &&(
@@ -295,7 +407,7 @@ export default function BudgetByRegion(){
           )}
 
           {isModalOpenBudget &&(
-            <ModalBudget isOpen={isModalOpenBudget} onClose={closeBudgetModal} />
+            <ModalBudgetClient isOpen={isModalOpenBudget} onClose={closeBudgetModal} />
           )}  
 
           {/*Banner Principal*/}      
@@ -329,7 +441,7 @@ export default function BudgetByRegion(){
               <Text variant="heading4Bold" styleSheet={{textAlign: 'left'}} color={theme.colors.primary.x500}>
                 Evento
               </Text>
-              <Box tag="form" styleSheet={{marginTop: '.5rem'}}    onSubmit={handleSubmit}>
+              <Box tag="form" styleSheet={{marginTop: '.5rem'}}  onSubmit={handleSubmit}>
                 <Box styleSheet={{
                   display: 'grid',
                   gridTemplateColumns:  size <= 820? '1fr':'65% 33%',
@@ -415,7 +527,7 @@ export default function BudgetByRegion(){
                       }}
                   />
                   
-                  <InputDash onChange={(e)=>setBairro(e)} type="text" required={true} placeholder="Bairro" styleSheet={{padding: '.5rem',  borderRadius: '5px', backgroundColor: theme.colors.neutral.x050}}/>
+                  <InputDash onChange={(e)=>setBairro(e)} type="text"  placeholder="Bairro" styleSheet={{padding: '.5rem',  borderRadius: '5px', backgroundColor: theme.colors.neutral.x050}}/>
                 </Box>
                 
                 <Box styleSheet={{paddingTop: '1rem'}}>
@@ -427,19 +539,22 @@ export default function BudgetByRegion(){
                     styleSheet={{height: '133px',padding: '.5rem',  borderRadius: '5px', backgroundColor: theme.colors.neutral.x050, width: 'auto'}}/>
                 </Box>
 
-                <Button  
-                  variant="contained"
-                  colorVariant="secondary"
-                  type="submit"
-               
-                  styleSheet={{
-                    marginTop: '1rem',
-                    alignSelf: 'center',
-                    boxShadow: `1px 2px 5px 1px ${theme.colors.neutral.x200}`,
-                    fontWeight: 'normal'
-                  }}
-                >Enviar para todos os buffets da região
-              </Button>
+  
+              <Button
+          type="submit"
+          variant="contained"
+          
+          disabled={isLoading}
+          style={{
+            backgroundColor: theme.colors.secondary.x500,
+            borderRadius: '20px',
+            marginTop: '1rem'
+          }}
+          startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : null}
+        >
+          {isLoading ? <Text color={theme.colors.neutral.x000}>Enviando...</Text> : <Text  color={theme.colors.neutral.x000}>Enviar para todos os buffets da região</Text>}
+        </Button>
+              
               {error ? <Text styleSheet={{color:' red', textAlign: 'center', marginTop: '1rem', fontSize: '.875rem'}}>{error}</Text>: ''}
               </Box>
               {

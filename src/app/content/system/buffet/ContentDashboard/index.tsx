@@ -9,6 +9,7 @@ import Homedash from "../pages/Dashboard";
 import EditPerfil from "../pages/Perfil";
 import Budgets from "../pages/BudgetId";
 import ImagesBuffet from "../pages/Images";
+import Settings from "../pages/Settings"
 import ListBudgets from "../pages/ListBugets";
 import BuffetService from "@src/app/api/BuffetService";
 import { UserContext } from "@src/app/context/UserContext";
@@ -21,7 +22,8 @@ export default function ContentDashboard(){
     'Perfil': EditPerfil,
     'Orçamentos': ListBudgets,
     'Imagens': ImagesBuffet,
-    'Orçamento': Budgets
+    'Orçamento': Budgets,
+    'Configurações': Settings
   };
 
   const {

@@ -24,6 +24,7 @@ export { default as perfil } from './perfil';
 export { default as coffe } from './coffe';
 export { default as notifications } from './notifications';
 export { default as settings } from './settings';
+export { default as settings2 } from './settings2';
 export { default as folder } from './folder';
 export { default as site } from './site';
 export { default as whatsapp } from './whatsapp';

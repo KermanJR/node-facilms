@@ -28,7 +28,7 @@
     "**/*.tsx",
     "***/*.css",
     "*.png"
-, "src/app/theme/screens/SearchPage/Components/FilterSection", "src/app/content/site/screens/HomeScreen/Components/GoogleLoginButton/index.js"  ],
+, "src/app/theme/screens/SearchPage/Components/FilterSection", "src/app/content/site/screens/HomeScreen/Components/GoogleLoginButton/index.js", "src/app/api/encryptPagSeguro.js"  ],
   "exclude": [
     "node_modules"
   ]

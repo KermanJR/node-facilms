@@ -3,7 +3,7 @@
 import { ModalContext } from "@src/app/context/ModalContext";
 import { useTheme } from "@src/app/theme/ThemeProvider";
 import Box from "@src/app/theme/components/Box/Box";
-import Button from "@src/app/theme/components/Button/Button";
+
 import Input from "@src/app/theme/components/Input/Input";
 import Link from "@src/app/theme/components/Link/Link";
 import Text from "@src/app/theme/components/Text/Text";
@@ -28,6 +28,8 @@ import ModalBudget from "../HomeScreen/Components/Modals/BudgetModal";
 import ModalLogin from "../HomeScreen/Components/Modals/LoginModal";
 import FundoLogin from '../../../../../../public/assets/images/fundo-login.jpg';
 import FundoLogin2 from '../../../../../../public/assets/images/fundo-login2.jpg';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function LoginBuffet() {
   const theme = useTheme();
@@ -38,7 +40,7 @@ export default function LoginBuffet() {
   const [success, setSuccess] = useState<string | null>(null);
   const size = useSize()
   const isMobile = useResponsive()
-
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     setEmail,
@@ -123,8 +125,10 @@ export default function LoginBuffet() {
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: (!(size < 1230) ? '150px 75px 75px' : !(size < 410) ? '150px 30px 50px' : '150px 0px 30px'),
-        backgroundImage: `URL(${FundoLogin.src})`,
-        backgroundPosition: 'left bottom',
+        background: size <= 1000 ? 'linear-gradient(90deg, #2649AC 11.02%, #BE6BE1 73.28%)': `URL(${FundoLogin.src})`,
+        backgroundSize: '100% 100%',
+        backgroundPosition: 'center'
+ 
       }}>
         
         <ul>
@@ -149,9 +153,21 @@ export default function LoginBuffet() {
             <p style={{width: 'auto', fontWeight: !(size < 1230) ? 'bold' : '500', color: '#fff', fontSize: !(size < 350) ? '1.2rem' : '0.6rem'}}>Sem fidelidade, cancele quando quiser.</p>
           </li>
           <li>
-            <Button colorVariant="secondary" type="submit" styleSheet={{width: '40%', minWidth: '200px', margin: '10px'}} onClick={() => router.push('/anuncie-seu-buffet')}>
-              CADASTRE-SE
-            </Button>
+          <Button
+          type="submit"
+          variant="contained"
+          onClick={(e)=>router.push('/anuncie-seu-buffet')}
+          disabled={isLoading}
+          style={{
+            backgroundColor: theme.colors.secondary.x500,
+            borderRadius: '20px',
+            marginLeft: '1rem',
+            marginTop: '1rem'
+          }}
+          startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : null}
+        >
+          {isLoading ? <Text color={theme.colors.neutral.x000}>Enviando...</Text> : <Text  color={theme.colors.neutral.x000}>Cadastre-se</Text>}
+        </Button>
           </li>
         </ul>
   
@@ -173,7 +189,6 @@ export default function LoginBuffet() {
             maxWidth: '500px',
             margin: !(size < 1110) ? '' : '20px auto 0',
             padding: !(size < 360) ? '2rem' : '2rem 0.5rem',
-            backgroundColor: 'rgba(217, 217, 217, 0.14)',
             borderRadius: '6px'
           }}
         >
@@ -188,6 +203,7 @@ export default function LoginBuffet() {
               </Box>
               <Input 
                 type="email" 
+                required={true}
                 placeholder="Insira seu e-mail"
                 onChange={(e)=>setEmail(e)}
                 styleSheet={{
@@ -205,6 +221,7 @@ export default function LoginBuffet() {
               </Box>
               <Input 
                 type="password" 
+                required={true}
                 placeholder="Insira sua senha"
                 onChange={(e)=>setPassword(e)}
                 styleSheet={{
@@ -217,16 +234,29 @@ export default function LoginBuffet() {
                 }}
               />
             </Box>
-              <Button colorVariant="secondary" type="submit" isLoading={loading} styleSheet={{width: '96%', margin: '0 auto', fontSize: '1rem', letterSpacing: '3.5px', borderRadius: '0px'}}>
-                LOGIN
-              </Button>
-              {error && (
-                <Text color={theme.colors.negative.x700}>{error}</Text>
-              )}
-              {success && (
-                <Text color={theme.colors.positive.x700}>{success}</Text>
-              )}
-              <Link href="/" styleSheet={{textAlign: 'center', color: theme.colors.neutral.x000}} variant="body1">Esqueci minha senha</Link>
+            <Button
+          type="submit"
+          variant="contained"
+          
+          disabled={isLoading}
+          style={{
+            backgroundColor: theme.colors.secondary.x500,
+            borderRadius: '0',
+            width: '96%',
+            margin: '0 auto'
+          }}
+          startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : null}
+        >
+          {isLoading ? <Text color={theme.colors.neutral.x000}>Enviando...</Text> : <Text  color={theme.colors.neutral.x000}>Login</Text>}
+        </Button>
+ 
+              <Link href="/" styleSheet={{textAlign: 'left', color: theme.colors.neutral.x000, marginLeft: '8px'}} variant="body1">Esqueci minha senha</Link>
+            
+                <Text color={theme.colors.negative.x700} styleSheet={{height: '20px', marginLeft: '8px'}}>{error && error}</Text>
+            
+              
+                <Text color={theme.colors.positive.x700} styleSheet={{height: '20px',marginLeft: '8px', marginTop: '-1rem'}}>{success && success}</Text>
+          
             </Box>
           </Box>
         </Box>
@@ -238,28 +268,28 @@ export default function LoginBuffet() {
         justifyContent: 'center',
         alignItems: 'center',
         gap: '20px',
-        padding: '40px 10px'
+        padding: '8rem 10px'
       }}>
         <Box styleSheet={{width: '20%', minWidth: '180px', maxWidth: '400px'}}>
-          <Image src={IconLoginBuffet1.src} alt="Icon" styleSheet={{width: '60%', margin: '0 auto', objectFit: 'contain'}}/>
+          <Image src={IconLoginBuffet1.src} alt="Icon" styleSheet={{width: '40%', margin: '0 auto', objectFit: 'contain'}}/>
           <Text styleSheet={{textAlign: 'center'}}>
             Receba solicitações de orçamento dos clientes interessados em realizar um evento.
           </Text>
         </Box>
         <Box styleSheet={{width: '20%', minWidth: '180px', maxWidth: '400px'}}>
-          <Image src={IconLoginBuffet2.src} alt="Icon" styleSheet={{width: '60%', margin: '0 auto', objectFit: 'contain'}}/>
+          <Image src={IconLoginBuffet2.src} alt="Icon" styleSheet={{width: '40%', margin: '0 auto', objectFit: 'contain'}}/>
           <Text styleSheet={{textAlign: 'center'}}>
             Aumente a visibilidade da sua empresa na internet e seja visto por mais clientes.
           </Text>
         </Box>
         <Box styleSheet={{width: '20%', minWidth: '180px', maxWidth: '400px'}}>
-          <Image src={IconLoginBuffet3.src} alt="Icon" styleSheet={{width: '60%', margin: '0 auto', objectFit: 'contain'}}/>
+          <Image src={IconLoginBuffet3.src} alt="Icon" styleSheet={{width: '40%', margin: '0 auto', objectFit: 'contain'}}/>
           <Text styleSheet={{textAlign: 'center'}}>
             Exponha sua empresa para o público alvo do seu negócio e obtenha melhores resultados.
           </Text>
         </Box>
         <Box styleSheet={{width: '20%', minWidth: '180px', maxWidth: '400px'}}>
-          <Image src={IconLoginBuffet4.src} alt="Icon" styleSheet={{width: '60%', margin: '0 auto', objectFit: 'contain'}}/>
+          <Image src={IconLoginBuffet4.src} alt="Icon" styleSheet={{width: '40%', margin: '0 auto', objectFit: 'contain'}}/>
           <Text styleSheet={{textAlign: 'center'}}>
             Gerencie seus clientes e solicitações de orçamento através da nossa plataforma.
           </Text>
@@ -276,8 +306,10 @@ export default function LoginBuffet() {
         marginBottom: '-65px',
         marginTop: '1rem',
         padding: (!(size < 1230) ? '75px' : !(size < 410) ? '10rem 30px' : '10rem 0px'),
-        backgroundImage: `URL(${FundoLogin2.src})`,
-        backgroundPosition: 'left bottom',
+        background: size <= 1000 ? 'linear-gradient(90deg, #2649AC 11.02%, #BE6BE1 73.28%)': `URL(${FundoLogin2.src})`,
+        backgroundSize: '100% contain',
+        backgroundPosition: 'center'
+
       }}>
         <Box>
           <Text tag={!(size < 610) ? 'h1' : 'h2'} variant={!(size < 610) ? 'heading1semiBold' : 'heading3semiBold'} styleSheet={{
@@ -320,9 +352,21 @@ export default function LoginBuffet() {
           }}>
             EXPERIMENTE GRÁTIS POR 90 DIAS
           </Text>
-          <Button colorVariant="secondary" type="submit" styleSheet={{width: '40%', minWidth: '200px', maxWidth: '250px', margin: '30px auto 0px'}} onClick={() => router.push('/anuncie-seu-buffet')}>
-              CADASTRE-SE
-          </Button>
+          <Button
+          type="submit"
+          variant="contained"
+          onClick={(e)=>router.push('/anuncie-seu-buffet')}
+          disabled={isLoading}
+          style={{
+            backgroundColor: theme.colors.secondary.x500,
+            borderRadius: '20px',
+            width: '40%',
+            margin: '.5rem auto'
+          }}
+          startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : null}
+        >
+          {isLoading ? <Text color={theme.colors.neutral.x000}>Enviando...</Text> : <Text  color={theme.colors.neutral.x000}>Cadastre-se</Text>}
+        </Button>
         </Box>
       </Box>
     </Box>

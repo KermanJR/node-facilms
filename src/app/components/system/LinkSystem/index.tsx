@@ -13,6 +13,7 @@ interface LinkProps{
   colorVariant?: 'primary' | 'secondary' | 'accent' | 'neutral' | 'success' | 'warning' | 'negative' | 'complementar';
   colorVariantEnabled?: boolean;
   backgroundColor?: string;
+  disabled?: boolean;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 

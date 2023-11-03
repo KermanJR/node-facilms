@@ -32,9 +32,9 @@ export const Relacionados = ({data}) => {
 
   const idCidadeBuffetCurrent = data?.entidade?.enderecos[0]?.endereco?.id_cidade;
   const buffetsRelacionados = buffets.filter(buffet => {
-    const idCidadeBuffet = buffet.entidade.enderecos[0].endereco.cidade.id;
-    const isPremium = buffet.entidade.assinaturas.some(
-      assinatura => assinatura.tipo === 'M' && assinatura.status === 'Aprovado'
+    const idCidadeBuffet = buffet?.entidade?.enderecos[0]?.endereco?.cidade?.id;
+    const isPremium = buffet?.entidade?.assinaturas?.some(
+      assinatura => assinatura?.tipo === 'M' && assinatura?.status === 'Aprovado'
     );
 
     return idCidadeBuffet === idCidadeBuffetCurrent && isPremium;

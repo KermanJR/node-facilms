@@ -35,8 +35,26 @@ export default class PagBankService {
     }
   }
 
-  static async createCustomer({ data }): Promise<any> {
-    const url = `${API_URL_BUSCABUFFET}/pagamentos/pagbank?resource=customers`;
+  static async getOrderByIdPagBank() {
+    const url = `${API_URL_BUSCABUFFET}/pagamentos/pagbank?resource=orders`;
+    const bearerToken = localStorage.getItem('USER_TOKEN');
+  
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      });
+  
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao consultar o pedido do  buffet:', error);
+      throw error;
+    }
+  }
+
+  static async createCustomerAndSubscription({ data }): Promise<any> {
+    const url = `${API_URL_BUSCABUFFET}/pagamentos/pagbank?resource=subscriptions`;
     const bearerToken = localStorage.getItem('USER_TOKEN');
   
     try {
@@ -49,15 +67,10 @@ export default class PagBankService {
         body: JSON.stringify(data),
       });
   
-      if (!response.ok) {
-        throw new Error(`Erro ao criar assinatura para o usuário: ${response.status} - ${response.statusText}`);
-      }
-  
       const responseData = await response.json();
       return responseData;
     } catch (error) {
-      console.error('Erro ao criar assinatura para o usuário:', error);
-      throw error;
+      return error;
     }
   }
   
@@ -78,12 +91,83 @@ export default class PagBankService {
     }
   }
 
+  
+  static async getCustomerPagBankById(id): Promise<any> {
+    const url = `${API_URL_BUSCABUFFET}/pagamentos/pagbank?resource=customers/${id}`;
+    try {
+      const response = await axios.get(url,{
+        headers: {
+          Authorization: `Bearer ${apiPagBankKey}`,
+        },
+      });
+  
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao vincular assinante com plano:', error);
+      throw error;
+    }
+  }
+
+  static async getSignaturesPagBankById(id): Promise<any> {
+    const url = `${API_URL_BUSCABUFFET}/pagamentos/pagbank?resource=subscriptions/${id}`;
+    try {
+      const response = await axios.get(url,{
+        headers: {
+          Authorization: `Bearer ${apiPagBankKey}`,
+        },
+      });
+  
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao vincular assinante com plano:', error);
+      throw error;
+    }
+  }
+
+  static async editCustomerPagBankById(id, data): Promise<any> {
+    const url = `${API_URL_BUSCABUFFET}/pagamentos/pagbank?resource=customers/${id}`;
+    try {
+      const response = await axios.put(url, data,{
+        headers: {
+          Authorization: `Bearer ${apiPagBankKey}`,
+        },
+      });
+  
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao vincular assinante com plano:', error);
+      throw error;
+    }
+  }
+
+
+
+
 
   ////Relacionado a api do buffet///
   static async createSignatureInBuffet(data): Promise<any> {
     const url = `${API_URL_BUSCABUFFET}/assinaturas`;
     try {
       const response = await axios.post(url, data, {
+        headers: {
+          Authorization: `Bearer ${apiPagBankKey}`,
+        },
+      });
+  
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao criar assinatura para o usuário:', error);
+      throw error;
+    }
+  }
+
+ 
+
+   ////Relacionado a api do buffet///
+   static async editSignatureInBuffet(data, id_entidade): Promise<any> {
+    const url = `${API_URL_BUSCABUFFET}/assinaturas/${id_entidade}`;
+    try {
+      const response = await axios.put(url, data, {
         headers: {
           Authorization: `Bearer ${apiPagBankKey}`,
         },

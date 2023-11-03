@@ -19,7 +19,7 @@ import moment from 'moment-timezone';
 
 
 const Events = () => {
-  const EventActionPopup = ({ onEdit, onDelete, styleSheet, selectedProposta }) => (
+  const EventActionPopup = ({ onEdit, onDelete, styleSheet, selectedProposta, selectedNomeEvento, idEvento}) => (
     <Box styleSheet={{ 
       display: 'flex',
       flexDirection: 'row',
@@ -32,13 +32,14 @@ const Events = () => {
       backgroundColor: theme.colors.neutral.x000,
       boxShadow: `0px 4px 4px 0px ${theme.colors.neutral.x050}`
       }}>
-      <Icon name="trash" onClick={handleDelete} />
-      <Icon name="eye" onClick={(e)=>openModal(selectedProposta)} />
+      <Icon name="trash" onClick={(e)=>handleDelete(idEvento)} />
+      <Icon name="eye" onClick={(e)=>openModal(selectedProposta, selectedNomeEvento, selectedIdEvento)} />
     </Box>
   );
 
   const [propostas, setPropostas] = useState([])
   const [selectedProposta, setSelectedProposta] = useState([])
+  const [selectedIdEvento, setSelectedIdEvento] = useState(null)
 
 const {
   dataUser
@@ -55,13 +56,13 @@ const {
   const [obs, setObs] = useState(null);
   const [path, setPath] = useState(null);
 
-  const openModal = (selectedProposta) => {
-    console.log(selectedProposta)
-    
-    BuffetService.showBudgetsById(selectedProposta)
+  const openModal = (selectedProposta, selectedNomeEvento, idEvento) => {
+    setSelectedIdEvento(idEvento)
+    BuffetService.showBudgetsByStatus(selectedProposta)
     .then(res=>{
-      console.log(res)
-      setSelectedProposta(res)
+      let filtro = res?.filter((item, index)=> item?.evento?.nome === selectedNomeEvento
+      )
+      setSelectedProposta(filtro)
     }).catch(err=>{
       console.log(err)
     })
@@ -78,8 +79,13 @@ const {
 
   };
 
-  const handleDelete = (index) => {
-    BuffetService.deleteEvento(index)
+  const handleDelete = (idEvento) => {
+    BuffetService.deleteEvento(idEvento)
+    .then(res=>{
+      getEventsByStatus()
+    }).catch(err=>{
+      console.log(err)
+    })
   };
   function DownloadLink(index){
     const fileURL = `https://buscabuffet.com.br${index}`;
@@ -92,40 +98,44 @@ const {
   }
   
   useEffect(()=>{
+    getEventsByStatus()
+  }, [propostas != null])
+
+  function getEventsByStatus(){
     BuffetService.showEventsByStatus(dataUser?.['entidade']?.id)
     .then(res=>{
+      console.log(res)
       setPropostas(res);
     }).catch(err=>{
       console.log(err)
     })
-  }, [])
-
-  
-
-
-  const tiposEncontrados = {};
-const eventosUnicos = [];
-
-for (const evento of propostas) {
-  if (!tiposEncontrados[evento.nome]) {
-    tiposEncontrados[evento.nome] = true;
-    eventosUnicos.push(evento);
   }
-}
 
-console.log(eventosUnicos);
+ 
+  const tiposEncontrados = {};
+  const eventosUnicos = [];
+
+  for (const evento of propostas) {
+    if (!tiposEncontrados[evento.nome]) {
+      tiposEncontrados[evento.nome] = true;
+      eventosUnicos.push(evento);
+    }
+  }
+
+ 
+
 
   return (
     <Box styleSheet={{ display: "flex", flexDirection: "row", gap: "2rem", flexWrap: "wrap" }}>
       
       {isModalOpen &&(
         <Box styleSheet={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 100}}>
-        <Box styleSheet={{ backgroundColor: 'white', padding: '20px', borderRadius: '4px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)' }}>
+        <Box styleSheet={{ backgroundColor: 'white', padding: '20px', borderRadius: '4px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.5)', width: '70%' }}>
         
           <button onClick={closeModal} style={{textAlign: 'left', fontWeight: 'bold'}}>X</button>
-          <Box tag="table">
+        <Box tag="table">
           <TableHead >
-            <TableRow styleSheet={{display: 'flex', flexDirection: 'row'}}>
+            <TableRow styleSheet={{ flexDirection: 'row'}}>
               <TableCell>ID Orçamento</TableCell>
               <TableCell>Nome do Buffet</TableCell>
               <TableCell>Data Disponibilidade</TableCell>
@@ -133,24 +143,29 @@ console.log(eventosUnicos);
               <TableCell>Valor</TableCell>
               <TableCell>Observações</TableCell>
               <TableCell>Arquivo</TableCell>
+              
             </TableRow>
           </TableHead>
 
           <TableBody>
-           
-              <TableRow styleSheet={{display: 'flex', flexDirection: 'row'}}>
-                <TableCell>{selectedProposta?.['id']}</TableCell>
-                <TableCell>{selectedProposta?.['entidade']?.nome}</TableCell>
-                <TableCell>{converterData(selectedProposta?.['data_disponibilidade'])}</TableCell>
-                <TableCell>{selectedProposta?.['evento']?.qtd_pessoas}</TableCell>
-                <TableCell>{(selectedProposta?.['valor'])?.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</TableCell>
-                <Text styleSheet={{textAlign: 'left', color: 'black', width: '20%'}}>{selectedProposta?.['observacoes']}</Text>
-                <TableCell styleSheet={{display: 'flex', justifyContent: 'center', alignItems: 'left'}}>
-                  <Box onClick={(e)=>DownloadLink(selectedProposta?.['arquivo']?.path)}>
+           {
+            selectedProposta.map((item, index)=>(
+            <TableRow key={index} styleSheet={{display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between', gap: 'none'}}>     
+                <TableCell styleSheet={{width: '14%',  }}>{item?.['id']}</TableCell>
+                <TableCell styleSheet={{width: '14%',  }}>{item?.['entidade']?.nome}</TableCell>
+                <TableCell styleSheet={{width: '14%'}}>{converterData(item[0]?.['data_disponibilidade'])}</TableCell>
+                <TableCell styleSheet={{width: '14%'}}>{item?.['evento']?.qtd_pessoas}</TableCell>
+                <TableCell styleSheet={{width: '14%'}}>{(item?.['valor'])?.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</TableCell>
+                <Text styleSheet={{width: '14%', textAlign: 'left', color: 'black'}}>{item?.['observacoes']}</Text>
+                <TableCell styleSheet={{display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '14%', textAlign: 'right'}}>
+                  <Box onClick={(e)=>DownloadLink(item?.['arquivo']?.path)} styleSheet={{marginRight: '5rem'}}>
                     <Icon name="file" id='downloadLink' />
                   </Box>
                 </TableCell>
               </TableRow>
+            ))
+           }
+              
             
           </TableBody>
         </Box>
@@ -171,9 +186,11 @@ console.log(eventosUnicos);
         >
           {hoveredEvent === index && (
             <EventActionPopup
-            selectedProposta={eventTitle?.id_entidade}
+            selectedNomeEvento={eventTitle?.nome}
+            selectedProposta={dataUser['entidade'].id}
+            idEvento={eventTitle?.id}
               onEdit={() => handleEdit(index)}
-              onDelete={() => handleDelete(index)}
+              onDelete={() => handleDelete(eventTitle?.id)}
               styleSheet={{
                 position: 'absolute',
                 top: 0,
