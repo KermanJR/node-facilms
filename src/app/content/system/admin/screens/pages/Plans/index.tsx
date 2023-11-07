@@ -64,7 +64,7 @@ const Plans = () =>{
 
         <Box tag="table">
           <TableHead>
-            <TableRow>
+            <TableRow styleSheet={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
               <TableCell><p>Nome</p> <FilterArrows functionupArrow={orderByStringGrowing} functionDownArrow={orderByStringDescending} property="nome"/></TableCell>
               <TableCell><p>Valor Mensal</p> <FilterArrows functionupArrow={orderByGrowing} functionDownArrow={orderByDescending} property="valor_mensal"/></TableCell>
               <TableCell><p>Valor Anual</p> <FilterArrows functionupArrow={orderByGrowing} functionDownArrow={orderByDescending} property="valor_anual"/></TableCell>
@@ -75,11 +75,11 @@ const Plans = () =>{
 
           <TableBody>
             {plans.map((item, index)=>(
-              <TableRow key={index} >
+              <TableRow key={index} styleSheet={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                 <TableCell>{item?.['nome']}</TableCell>
                 <TableCell>{item?.['valor_mensal']}</TableCell>
                 <TableCell>{item?.['valor_anual']}</TableCell>
-                <TableCell><div style={{textAlign: 'left'}}>{item['tags']?.reduce((sum, element) => sum += `• ${element}\n`, '')}</div></TableCell>
+                <TableCell styleSheet={{width: '15%'}}><div style={{textAlign: 'left'}}>{item['tags']?.reduce((sum, element) => sum += `• ${element}\n`, '')}</div></TableCell>
                 <Box onClick={(e)=> {setIndex(index), setId(item?.['id']), setIsModalOpenEditPlan(!isModalOpenEditPlan)}} styleSheet={{cursor: 'pointer'}}>
                   <Text variant="heading5semiBold">...</Text>
                 </Box>

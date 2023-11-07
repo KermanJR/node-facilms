@@ -7,7 +7,7 @@ import ActivePageContext from '@src/app/context/ActivePageContext';
 import { UserContext } from '@src/app/context/UserContext';
 import {BiLogOutCircle} from 'react-icons/bi'
 import BuffetService from '@src/app/api/BuffetService';
-
+import {FaUserAlt} from 'react-icons/fa'
 const Perfil = () => {
 
   const theme = useTheme();
@@ -41,7 +41,7 @@ const Perfil = () => {
         position: 'relative',
         left: '10px',
       }}>
-
+        <FaUserAlt style={{height: '40px', width: '40px', margin: '0.7rem auto'}} fill={theme.colors.neutral.x800}/>
       </Box>
 
     </Box>

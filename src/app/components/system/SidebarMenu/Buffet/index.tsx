@@ -36,7 +36,7 @@ const SidebarMenuIsOpenBuffet = () => {
       ]
     },
     { 
-      label: 'Configurações', 
+      label: 'Assinatura', 
       icon: 'settings2', 
     },
     { label: 'Voltar ao site', icon: 'site', action: () => BuffetService.logout() }

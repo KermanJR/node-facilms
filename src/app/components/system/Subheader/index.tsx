@@ -8,7 +8,7 @@ import Notifications from '../Notifications';
 import Settings from '../Settings';
 import Perfil from '../Perfil';
 import { UserContext } from '@src/app/context/UserContext';
-
+import BiUser from 'react-icons/bi'
 
 const SubHeader = () => {
 

@@ -30,6 +30,7 @@ import FundoLogin from '../../../../../../public/assets/images/fundo-login.jpg';
 import FundoLogin2 from '../../../../../../public/assets/images/fundo-login2.jpg';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
+import ModalRecoveryPassword from "../HomeScreen/Components/Modals/RecoveryPassword";
 
 export default function LoginBuffet() {
   const theme = useTheme();
@@ -58,7 +59,10 @@ export default function LoginBuffet() {
     isNovoModalOpen,
     closeNovoModal,
     closeBudgetModal,
-    isModalOpenBudget
+    isModalOpenBudget,
+    isModalRecoveryPassword,
+    closeRecoveryPassword,
+    openRecoveryPassword
   } = useContext(ModalContext)
 
 
@@ -117,6 +121,10 @@ export default function LoginBuffet() {
 
           {isModalOpenBudget &&(
             <ModalBudget isOpen={isModalOpenBudget} onClose={closeBudgetModal} />
+          )}  
+
+{isModalRecoveryPassword &&(
+            <ModalRecoveryPassword isOpen={isModalRecoveryPassword} onClose={closeRecoveryPassword} />
           )}  
       <Box styleSheet={{
         position: 'relative',
@@ -248,15 +256,14 @@ export default function LoginBuffet() {
           startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : null}
         >
           {isLoading ? <Text color={theme.colors.neutral.x000}>Enviando...</Text> : <Text  color={theme.colors.neutral.x000}>Login</Text>}
-        </Button>
- 
-              <Link href="/" styleSheet={{textAlign: 'left', color: theme.colors.neutral.x000, marginLeft: '8px'}} variant="body1">Esqueci minha senha</Link>
-            
-                <Text color={theme.colors.negative.x700} styleSheet={{height: '20px', marginLeft: '8px'}}>{error && error}</Text>
-            
-              
-                <Text color={theme.colors.positive.x700} styleSheet={{height: '20px',marginLeft: '8px', marginTop: '-1rem'}}>{success && success}</Text>
-          
+            </Button>
+    
+              <Box  onClick={openRecoveryPassword} styleSheet={{display: 'flex', flexDirection: 'row', gap: '1rem'}}>
+                <Text styleSheet={{textAlign: 'left', color: theme.colors.neutral.x000, cursor: 'pointer', marginLeft: '.5rem'}} variant="body1">Esqueci minha senha</Text>
+              </Box>
+
+              <Text color={theme.colors.negative.x700} styleSheet={{height: '20px', marginLeft: '8px'}}>{error && error}</Text>
+              <Text color={theme.colors.positive.x700} styleSheet={{height: '20px',marginLeft: '8px', marginTop: '-1rem'}}>{success && success}</Text>
             </Box>
           </Box>
         </Box>

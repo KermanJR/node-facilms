@@ -69,7 +69,7 @@ const Homedash = () =>{
 
   return(
     <Box styleSheet={{height: '100vh'}} tag="div">
-      <BoxDash styleSheet={{flexDirection: 'row', justifyContent: 'left', gap: '2rem', width: '27%'}}>
+      <BoxDash styleSheet={{flexDirection: 'row', justifyContent: 'left', gap: '2rem', width: '33%'}}>
         <Box styleSheet={{
           height: '84px',
           width: '84px',
@@ -110,7 +110,7 @@ const Homedash = () =>{
 
         <Box tag="table">
           <TableHead>
-            <TableRow styleSheet={{flexDirection: 'row'}}>
+            <TableRow styleSheet={{display: 'flex', flexDirection: 'row', gap: '0'}}>
               <TableCell>ID Proposta<FilterArrows functionupArrow={orderByGrowing} functionDownArrow={orderByDescending} property="id"/></TableCell>
               <TableCell>Nome do Buffet<FilterArrows functionupArrow={orderByGrowing} functionDownArrow={orderByDescending} property="id"/></TableCell>
               <TableCell>Data Disponibilidade<FilterArrows functionupArrow={orderByDateGrowing} functionDownArrow={orderByDateDescending} property="id"/></TableCell>
@@ -118,19 +118,18 @@ const Homedash = () =>{
               <TableCell>Valor<FilterArrows functionupArrow={orderByGrowing} functionDownArrow={orderByDescending} property="id"/></TableCell>
               <TableCell>Observações<FilterArrows functionupArrow={orderByGrowing} functionDownArrow={orderByDescending} property="id"/></TableCell>
               <TableCell>Arquivo<FilterArrows functionupArrow={orderByGrowing} functionDownArrow={orderByDescending} property="id"/></TableCell>
-
             </TableRow>
           </TableHead>
 
           <TableBody>
             {propostas?.slice(viewElements, viewElements + 20).map((item, index)=>(
-              <TableRow key={index}>
+              <TableRow key={index} styleSheet={{display: 'flex', flexDirection: 'row', flexWrap: 'no-wrap'}}>
                 <TableCell>{item?.['id']}</TableCell>
                 <TableCell>{item?.entidade?.['nome']}</TableCell>
                 <TableCell>{converterData(item?.['data_do_evento'])}</TableCell>
                 <TableCell>{item?.evento?.['qtd_pessoas']}</TableCell>
                 <TableCell>{(item?.['valor']).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</TableCell>
-                <TableCell styleSheet={{textAlign: 'left', color: 'black'}}>{item?.['observacoes']}</TableCell>
+                <TableCell styleSheet={{textAlign: 'left', color: 'black', width: '15%'}}>{item?.['observacoes']}</TableCell>
                 <TableCell styleSheet={{display: 'flex', justifyContent: 'center', alignItems: 'left'}}>
                   <Box onClick={(e)=>DownloadLink(index)}>
                     <Icon name="file" id='downloadLink' />

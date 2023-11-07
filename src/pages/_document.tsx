@@ -52,6 +52,7 @@ export default class MyDocument extends Document {
         <script src="https://assets.pagseguro.com.br/checkout-sdk-js/rc/dist/browser/pagseguro.min.js"></script>
         <script src="https://accounts.google.com/gsi/client" async defer></script>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+        <link rel="icon" href="/logo-ico.ico" />
         </Head>
         <body>
           <Main />

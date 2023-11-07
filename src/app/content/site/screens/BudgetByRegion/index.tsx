@@ -10,7 +10,7 @@ import Input from "@src/app/theme/components/Input/Input";
 import { ModalContext } from "@src/app/context/ModalContext";
 import ModalRegister from "../HomeScreen/Components/Modals/RegisterModal";
 import ModalLogin from "../HomeScreen/Components/Modals/LoginModal";
-import ModalBudgetClient from "../HomeScreen/Components/Modals/ModalLoginCliente";
+
 import useSize from "@src/app/theme/helpers/useSize";
 import InputDash from "@src/app/components/system/InputDash";
 import Select from "@src/app/theme/components/Select/Select";
@@ -24,18 +24,24 @@ import Correct from '../../../../../../public/assets/images/correct.png'
 import Image from "@src/app/theme/components/Image/Image";
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
+import ModalRecoveryPassword from "../HomeScreen/Components/Modals/RecoveryPassword";
 export default function BudgetByRegion(){
 
   
+  
   const {
-
+    isModalOpen,
+    closeModal,
     isNovoModalOpen,
     closeNovoModal,
+    closeBudgetModal,
     isModalOpenBudget,
-    openNovoModal,
-    openBudgetModal,
-    closeBudgetModal
+    isModalRecoveryPassword,
+    closeRecoveryPassword,
+    openRecoveryPassword,
+    openBudgetModal
   } = useContext(ModalContext)
+
 
   const {
     dataBuffet,
@@ -175,26 +181,30 @@ export default function BudgetByRegion(){
             width: '50%'
           }}>
 
-         <Button
-          type="submit"
-          variant="contained"
+       
+
+        <Button
           onClick={(e)=>setShowConfirmationModal(!showConfirmationModal)}
-          disabled={isLoading}
+          fullWidth={false}
           style={{
-            width: '20px',
-            height: '20px',
-            border: 'none',
-            textAlign: 'left',
-            cursor: 'pointer',
-            background: theme.colors.secondary.x500,
-            marginLeft: '1rem',
-            marginTop: '1rem',
-            borderRadius: '20px',
+            backgroundColor: theme.colors.secondary.x500,
+            borderRadius: '100%',
+            height: '30px',
+            width: '25px',
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            marginBottom: '1rem',
+            position: 'relative',
+            alignSelf: 'end',
+            marginTop: '-1rem',
+            marginRight: '-1rem',
+            boxShadow: '0.5px 1px 3px 1px #969BA0'
           }}
-        
         >
           X
-        </Button>
+      </Button>
         
          <Text variant="heading5" color="green" styleSheet={{display:' flex', flexDirection: 'row', height: '60%',justifyContent: 'center', alignItems: 'center', marginTop: '-1rem'}}>
            {dataUser['entidade']?.nome}, orçamento enviado com sucesso!
@@ -407,8 +417,12 @@ export default function BudgetByRegion(){
           )}
 
           {isModalOpenBudget &&(
-            <ModalBudgetClient isOpen={isModalOpenBudget} onClose={closeBudgetModal} />
+            <ModalBudget isOpen={isModalOpenBudget} onClose={closeBudgetModal} />
           )}  
+
+{isModalRecoveryPassword &&(
+            <ModalRecoveryPassword isOpen={isModalRecoveryPassword} onClose={closeRecoveryPassword} />
+          )} 
 
           {/*Banner Principal*/}      
           <Box styleSheet={{

@@ -23,7 +23,7 @@ export default function ContentDashboard(){
     'Orçamentos': ListBudgets,
     'Imagens': ImagesBuffet,
     'Orçamento': Budgets,
-    'Configurações': Settings
+    'Assinatura': Settings
   };
 
   const {

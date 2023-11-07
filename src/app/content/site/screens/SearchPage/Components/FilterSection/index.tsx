@@ -74,13 +74,18 @@ export function FilterSection() {
   
         const statusFiltro = 'A'; // Altere isso para o status desejado (por exemplo, 'A' para ativo)
         const buffetsAtivos = filteredBuffets.filter((buffet) => buffet.status === statusFiltro &&
-        buffet?.entidade?.assinaturas[0]?.status === "Aprovado");
+        buffet?.entidade?.assinaturas[0]?.status === "ACTIVE");
 
   
         const premiumBuffets = buffetsAtivos.filter(
           (buffet) => buffet?.entidade?.assinaturas[0]?.plano?.nome === 'Premium'
         );
-  
+
+          // Filtrar buffets com perfil destacado
+        const destacadoPremiunsBuffets = premiumBuffets.filter((buffet) => {
+          return buffet?.entidade?.destacado === '1';
+        });
+    
         const otherBuffets = buffetsAtivos.filter(
           (buffet) => buffet?.entidade?.assinaturas[0]?.plano?.nome !== 'Premium'
         );
@@ -89,7 +94,7 @@ export function FilterSection() {
           return a.entidade.nome.localeCompare(b.entidade.nome);
         });
   
-        const sortedBuffets: any = [...premiumBuffets, ...otherBuffets];
+        const sortedBuffets: any = [...destacadoPremiunsBuffets, ...premiumBuffets, ...otherBuffets];
   
         setDataBuffet(sortedBuffets);
       });
@@ -106,12 +111,18 @@ useEffect(() => {
       // Filtrar buffets com base no campo "status"
       const statusFiltro = 'A'; // Altere isso para o status desejado (por exemplo, 'A' para ativo)
       const buffetsAtivos = res.filter((buffet) => buffet.status === statusFiltro &&
-      buffet?.entidade?.assinaturas[0]?.status === "Aprovado")
+      buffet?.entidade?.assinaturas[0]?.status === "ACTIVE")
 
       // Separe os buffets "Premium" e outros
       const premiumBuffets = buffetsAtivos.filter(
         (buffet) => buffet?.entidade?.assinaturas[0]?.plano?.nome === 'Premium'
       );
+
+      // Filtrar buffets com perfil destacado
+      const destacadoPremiunsBuffets = premiumBuffets.filter((buffet) => {
+        return buffet?.entidade?.destacado === '1';
+      });
+  
       const otherBuffets = buffetsAtivos.filter(
         (buffet) => buffet?.entidade?.assinaturas[0]?.plano?.nome !== 'Premium'
       );
@@ -132,7 +143,7 @@ useEffect(() => {
       });
 
       // Combine os buffets filtrados
-      const sortedBuffets: any = [...premiumBuffets, ...filteredBuffets];
+      const sortedBuffets: any = [...destacadoPremiunsBuffets, ...premiumBuffets, ...filteredBuffets];
      
       setDataBuffet(sortedBuffets);
     });
@@ -152,11 +163,15 @@ useEffect(() => {
 
       const statusFiltro = 'A'; // Altere isso para o status desejado (por exemplo, 'A' para ativo)
       const buffetsAtivos = filteredBuffets.filter((buffet) => buffet.status === statusFiltro &&
-        buffet?.entidade?.assinaturas[0]?.status === "Aprovado")
+        buffet?.entidade?.assinaturas[0]?.status === "ACTIVE")
 
       const premiumBuffets = buffetsAtivos.filter(
         (buffet) => buffet?.entidade?.assinaturas[0]?.plano?.nome === 'Premium'
       );
+
+      const destacadoPremiunsBuffets = premiumBuffets.filter((buffet) => {
+        return buffet?.entidade?.destacado === '1';
+      });
 
       const otherBuffets = buffetsAtivos.filter(
         (buffet) => buffet?.entidade?.assinaturas[0]?.plano?.nome !== 'Premium'
@@ -166,7 +181,9 @@ useEffect(() => {
         return a.entidade.nome.localeCompare(b.entidade.nome);
       });
 
-      const sortedBuffets: any = [...premiumBuffets, ...otherBuffets];
+      const sortedBuffets: any = [...destacadoPremiunsBuffets, ...premiumBuffets, ...otherBuffets];
+
+      console.log(sortedBuffets)
 
       setDataBuffet(sortedBuffets);
       setSelectedCategory(null);
@@ -190,11 +207,15 @@ useEffect(() => {
 
       const statusFiltro = 'A'; // Altere isso para o status desejado (por exemplo, 'A' para ativo)
       const buffetsAtivos = filteredBuffets.filter((buffet) => buffet.status === statusFiltro &&
-        buffet?.entidade?.assinaturas[0]?.status === "Aprovado")
+        buffet?.entidade?.assinaturas[0]?.status === "ACTIVE")
 
       const premiumBuffets = buffetsAtivos.filter(
         (buffet) => buffet?.entidade?.assinaturas[0]?.plano?.nome === 'Premium'
       );
+
+      const destacadoPremiunsBuffets = premiumBuffets?.filter((buffet) => {
+        return buffet?.entidade?.destacado === '1';
+      });
 
       const otherBuffets = buffetsAtivos.filter(
         (buffet) => buffet?.entidade?.assinaturas[0]?.plano?.nome !== 'Premium'
@@ -204,7 +225,7 @@ useEffect(() => {
         return a.entidade.nome.localeCompare(b.entidade.nome);
       });
 
-      const sortedBuffets: any = [...premiumBuffets, ...otherBuffets];
+      const sortedBuffets: any = [...destacadoPremiunsBuffets, ...premiumBuffets, ...otherBuffets];
 
       setDataBuffet(sortedBuffets);
     });
@@ -224,11 +245,16 @@ useEffect(() => {
 
       const statusFiltro = 'A'; // Altere isso para o status desejado (por exemplo, 'A' para ativo)
       const buffetsAtivos = filteredBuffets.filter((buffet) => buffet.status === statusFiltro &&
-      buffet?.entidade?.assinaturas[0]?.status === "Aprovado")
+      buffet?.entidade?.assinaturas[0]?.status === "ACTIVE")
 
       const premiumBuffets = buffetsAtivos.filter(
         (buffet) => buffet?.entidade?.assinaturas[0]?.plano?.nome === 'Premium'
       );
+
+      const destacadoPremiunsBuffets = premiumBuffets?.filter((buffet) => {
+        return buffet?.entidade?.destacado === '1';
+      });
+
 
       const otherBuffets = buffetsAtivos.filter(
         (buffet) => buffet?.entidade?.assinaturas[0]?.plano?.nome !== 'Premium'
@@ -238,7 +264,7 @@ useEffect(() => {
         return a.entidade.nome.localeCompare(b.entidade.nome);
       });
 
-      const sortedBuffets: any = [...premiumBuffets, ...otherBuffets];
+      const sortedBuffets: any = [...destacadoPremiunsBuffets, ...premiumBuffets, ...otherBuffets];
 
       setDataBuffet(sortedBuffets);
     });

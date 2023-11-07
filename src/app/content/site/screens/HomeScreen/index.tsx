@@ -20,6 +20,7 @@ import {MdLocalAtm} from "react-icons/md";
 import useSize from "@src/app/theme/helpers/useSize";
 import ModalBudget from "./Components/Modals/BudgetModal";
 import { useRouter } from "next/router";
+import ModalRecoveryPassword from "./Components/Modals/RecoveryPassword";
 
 export default function HomeScreen(){
 
@@ -32,7 +33,10 @@ export default function HomeScreen(){
     isNovoModalOpen,
     closeNovoModal,
     closeBudgetModal,
-    isModalOpenBudget
+    isModalOpenBudget,
+    isModalRecoveryPassword,
+    closeRecoveryPassword,
+    openRecoveryPassword
   } = useContext(ModalContext)
 
   const router = useRouter();
@@ -70,6 +74,11 @@ export default function HomeScreen(){
           {isModalOpenBudget &&(
             <ModalBudget isOpen={isModalOpenBudget} onClose={closeBudgetModal} />
           )}  
+
+      {isModalRecoveryPassword &&(
+            <ModalRecoveryPassword isOpen={isModalRecoveryPassword} onClose={closeRecoveryPassword} />
+          )}  
+
 
       {/*Banner Principal*/}      
       <Box styleSheet={{

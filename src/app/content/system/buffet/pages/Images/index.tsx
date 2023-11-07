@@ -131,6 +131,7 @@ const ImagesBuffet = () =>{
 
   //Remover Imagens
   const removeImage = (index) => {
+    console.log(index)
     const newImages = [...selectedImageThree];
   
     // Encontre o índice da imagem no array
@@ -167,7 +168,11 @@ const ImagesBuffet = () =>{
 async function PostFirstImageBuffetOne() {
   setIsLoading1(true)
   if(selectedImageOne){
-    BuffetService.postFileBuffet(selectedImageOne)
+
+    BuffetService.postFileBuffetImageOne({
+      selectedImageOne,
+      tipo: "capa"
+    })
     .then(async (response) => {
       try {
         const imageUrl = await loadImagePreview(selectedImageOne);
@@ -175,6 +180,8 @@ async function PostFirstImageBuffetOne() {
         createGalleryBuffet(response?.id);
         setModeFirstImage('edit')
         setMessageFirstImage('Imagem cadastrada com sucesso.')
+        setMessageSecondImage('')
+        setMessageThreeImage('')
       } catch (error) {
         setMessageFirstImage('Erro no cadastro da imagem.')
       }
@@ -194,8 +201,12 @@ async function PostFirstImageBuffetOne() {
 
 async function PostFirstImageBuffetTwo() {
   setIsLoading2(true)
-  if(selectedImageTwo && selectedImageOne){
-    BuffetService.postFileBuffet(selectedImageTwo)
+
+  if(selectedImageTwo){
+    BuffetService.postFileBuffetImageTwo({
+      selectedImageTwo,
+      tipo: "card"
+    })
     .then(async (response) => {
       try {
         const imageUrl = await loadImagePreview(selectedImageTwo);
@@ -203,6 +214,8 @@ async function PostFirstImageBuffetTwo() {
         createGalleryBuffet(response?.id);
         setModeSecondImage('edit')
         setMessageSecondImage('Imagem cadastrada com sucesso.')
+        setMessageFirstImage('')
+        setMessageThreeImage('')
         EditBuffet()
       } catch (error) {
         setMessageSecondImage('Erro no cadastro da imagem.')
@@ -214,8 +227,6 @@ async function PostFirstImageBuffetTwo() {
     });
   }else if(selectedImageTwo == null){
     setMessageSecondImage('Por favor, selecione uma imagem.')
-  }else if(selectedImageTwo && !selectedImageOne){
-    setMessageSecondImage('Por favor, primeiro selecione a foto de capa do perfil.')
   }
    setTimeout(()=>{
     setIsLoading2(false)
@@ -225,9 +236,12 @@ async function PostFirstImageBuffetTwo() {
 
 async function PostFirstImageBuffetThree() {
   setIsLoading3(true)
-  if(selectedImageThree?.length > 0 && selectedImageOne && selectedImageTwo){
+  if(selectedImageThree?.length > 0){
     selectedImageThree.forEach((imageFile) => {
-      BuffetService.postFileBuffet(imageFile)
+      BuffetService.postFileBuffetImageThree({
+        imageFile,
+        tipo: "galeria"
+      })
         .then(async (response) => {
   
           const imageUrl = await loadImagePreview(imageFile);
@@ -235,6 +249,8 @@ async function PostFirstImageBuffetThree() {
           setIdImageThree([...idImageThree, await response?.id])
           createGalleryBuffet(await response?.id)
           setMessageThreeImage('Imagens cadastradas com sucesso.')
+          setMessageFirstImage('')
+          setMessageSecondImage('')
           
         })
         .catch((error) => {
@@ -243,9 +259,6 @@ async function PostFirstImageBuffetThree() {
     });
   }else if(selectedImageThree?.length == 0){
     setMessageThreeImage('Por favor, selecione uma imagem.')
-  }
-  else if(selectedImageThree?.length > 0 && !selectedImageOne && !selectedImageTwo){
-    setMessageThreeImage('Por favor, primeiro selecione a foto de capa e perfil do buffet.')
   }
    setTimeout(()=>{
     setIsLoading3(false)
@@ -262,6 +275,8 @@ async function EditFirstImageBuffetOne() {
       try {
         const imageUrl = await loadImagePreview(selectedImageOne);
         setMessageFirstImage('Imagem editada com sucesso.')
+        setMessageSecondImage('')
+        setMessageThreeImage('')
         await setIdImageOne(response?.id)
        
       } catch (error) {
@@ -288,7 +303,9 @@ async function EditFirstImageBuffetTwo() {
       try {
         const imageUrl = await loadImagePreview(selectedImageTwo);
         await setIdImageTwo(response?.id)
-        setMessageFirstImage('Imagem editada com sucesso.')
+        setMessageSecondImage('Imagem editada com sucesso.')
+        setMessageFirstImage('')
+        setMessageThreeImage('')
       } catch (error) {
         setMessageFirstImage('Falha ao editar imagem.')
       }
@@ -312,7 +329,9 @@ async function EditFirstImageBuffetThree() {
       BuffetService.editFileBuffet(imageFile, imageFile?.id_arquivo)
         .then(async (response) => {
           idImagesGallery.push(await response?.id)
-          setMessageFirstImage('Imagens editadas com sucesso.')
+          setMessageThreeImage('Imagens editadas com sucesso.')
+          setMessageFirstImage('')
+          setMessageSecondImage('')
         })
         .catch((error) => {
           setMessageFirstImage('Falha ao editar imagens.')
@@ -679,7 +698,7 @@ function createGalleryBuffet(id_image){
               <Text styleSheet={{color: 'red', fontSize: '.8rem', alignSelf:' center', padding: '1rem', height: '10px'}}>Por favor, selecione uma imagem.</Text>
             }
 
-          {messageSecondImage == 'Por favor, primeiro selecione a foto de capa.' && 
+          {messageSecondImage == 'Por favor, primeiro selecione a foto de capa do perfil.' && 
               <Text styleSheet={{color: 'red', fontSize: '.8rem', alignSelf:' center', padding: '1rem', height: '10px'}}>Por favor, primeiro selecione a foto de capa do perfil.</Text>
             }
           
@@ -771,7 +790,7 @@ function createGalleryBuffet(id_image){
    <Text  color={theme.colors.neutral.x000}>Remover imagens</Text>
         </Button>
     
-    <Box styleSheet={{alignSelf: 'center', marginTop: '4rem'}}>
+    <Box styleSheet={{alignSelf: 'center', marginTop: '0rem'}}>
     {messageThreeImage == 'Imagens cadastradas com sucesso.' && 
               <Text styleSheet={{color: 'green', fontSize: '.8rem', alignSelf:' center', padding: '1rem', height: '10px'}}>Imagens cadastradas com sucesso.</Text>
             }

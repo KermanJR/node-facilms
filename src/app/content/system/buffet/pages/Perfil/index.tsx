@@ -403,7 +403,8 @@ const EditPerfil = () =>{
   function showAttractionsBuffets(){
     BuffetService.showAttractionBuffets()
     .then((response) => {
-      setAttractionsBuffets(response);
+      const sortedAttractionsBuffets = response.sort((a, b) => a.nome.localeCompare(b.nome));
+      setAttractionsBuffets(sortedAttractionsBuffets);
     })
     .catch((error) => {
       console.error('Erro ao buscar atrações para os Buffets:', error);
@@ -414,7 +415,8 @@ const EditPerfil = () =>{
   function showServicesBuffets(){
     BuffetService.showServicesBuffets()
     .then((response) => {
-      setServicesBuffets(response);
+      const sortedServicesBuffets = response.sort((a, b) => a.nome.localeCompare(b.nome));
+      setServicesBuffets(sortedServicesBuffets);
     })
     .catch((error) => {
       console.error('Erro ao buscar serviços para os Buffets:', error);
@@ -425,7 +427,10 @@ const EditPerfil = () =>{
   function showSecurityBuffets(){
     BuffetService.showSecurityBuffets()
     .then((response) => {
-      setSecurityBuffets(response);
+      const sortedSecuritiesBuffets = response.sort((a, b) => a.nome.localeCompare(b.nome));
+      setSecurityBuffets(sortedSecuritiesBuffets);
+
+    
     })
     .catch((error) => {
       console.error('Erro ao buscar items de segurança para os Buffets:', error);
@@ -449,27 +454,7 @@ const EditPerfil = () =>{
       });
   }
 
-  function formatarTelefone(input) {
-    // Remove todos os caracteres não numéricos
-    const numeroLimpo = input.value.replace(/\D/g, '');
-
-    // Formata o número conforme o padrão (XX) XXXXX-XXXX
-    let numeroFormatado = '';
-    if (numeroLimpo.length >= 2) {
-        numeroFormatado += `(${numeroLimpo.substring(0, 2)}`;
-    }
-    if (numeroLimpo.length >= 7) {
-        numeroFormatado += `) ${numeroLimpo.substring(2, 7)}-${numeroLimpo.substring(7, 11)}`;
-    }
-    else if (numeroLimpo.length >= 2) {
-        numeroFormatado += `) ${numeroLimpo.substring(2)}`;
-    }
-
-    // Define o valor formatado de volta no campo de entrada
-    input.value = numeroFormatado;
-    setPhoneBuffet(input.value)
-}
-
+ 
 
   async function EditAddressBuffet(){
     BuffetService.editAddressBuffets(idAddress, {
@@ -577,7 +562,7 @@ const EditPerfil = () =>{
     })
   }, [cep?.length === 8])
 
-
+  
   
   const EventActionPopup = () => (
     <Box styleSheet={{ 
@@ -601,13 +586,23 @@ const EditPerfil = () =>{
     </Box>
   );
 
+  const formatPhoneNumber = (input) => {
+    // Remove todos os caracteres não numéricos
+    const cleaned = input.replace(/\D/g, '');
 
-  useEffect(()=>{ 
-    
-  }, [selectedCategoria])
-
-
-
+    // Aplica a máscara para formatar o número de telefone
+    if (cleaned.length === 0) {
+      setPhoneBuffet('');
+    } else if (cleaned.length <= 2) {
+      setPhoneBuffet(`(${cleaned}`);
+    } else if (cleaned.length <= 3) {
+      setPhoneBuffet(`(${cleaned.slice(0, 2)}) ${cleaned.slice(2)}`);
+    } else if (cleaned.length <= 7) {
+      setPhoneBuffet(`(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 3)} ${cleaned.slice(3)}`);
+    } else {
+      setPhoneBuffet(`(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 3)} ${cleaned.slice(3, 7)} ${cleaned.slice(7)}`);
+    }
+  };
 
 
   return(
@@ -651,19 +646,19 @@ const EditPerfil = () =>{
      <Box styleSheet={{display: 'grid', gridTemplateColumns: '1fr 3fr 1fr 2fr', gap: '2rem', padding: '2rem 0 0 0'}}>
         <Box>
           <Text>CEP</Text>
-          <InputDash placeholder="Digite o CEP" type="text"  onChange={(e)=>setCep(e)} value={cep}/>
+          <InputDash placeholder="Digite o CEP" type="text"  onChange={(e)=>setCep(e)} value={cep} />
         </Box>
         <Box>
         <Text>Rua</Text>
-          <InputDash placeholder="Digite o nome da rua" type="text" value={rua} disabled={true}/>
+          <InputDash placeholder="Digite o nome da rua" type="text" value={rua} disabled={true} styleSheet={{paddingRight: '0'}}/>
         </Box>
         <Box>
           <Text>N°</Text>
-          <InputDash placeholder="Digite o número" type="text" value={numero} onChange={(e)=>setNumero(e)} required={true}/>
+          <InputDash placeholder="Digite o número" type="text" value={numero} onChange={(e)=>setNumero(e)} required={true} styleSheet={{paddingRight: '0'}}/>
         </Box>
         <Box>
           <Text>Complemento</Text>
-          <InputDash placeholder="Digite um complemento" type="text" value={complemento} onChange={(e)=>setComplemento(e)}/>
+          <InputDash placeholder="Digite um complemento" type="text" value={complemento} onChange={(e)=>setComplemento(e)} styleSheet={{paddingRight: '0'}}/>
         </Box>
      </Box>
 
@@ -702,7 +697,7 @@ const EditPerfil = () =>{
           <InputDash placeholder="Digite a capacidade Total" type="number" value={capacityTotalBuffet} onChange={setCapacityTotalBuffet} required={true}/>
         </Box>
         <Box>
-          <Text>Àrea Total</Text>
+          <Text>Àrea Total m²</Text>
           <InputDash placeholder="Digite Área total" type="text" value={areaTotal} onChange={setAreaTotal} required={true}/>
         </Box>
 
@@ -720,7 +715,7 @@ const EditPerfil = () =>{
      <Box styleSheet={{display: 'grid', gridTemplateColumns: '30% 20% 20% 23%', gap: '2rem', padding: '1rem 0 1rem 0'}}>
         <Box>
           <Text>Telefone</Text>
-          <InputDash placeholder="Digite seu telefone" type="text" value={phoneBuffet} onChange={(e)=>setPhoneBuffet(e)} required={true}/>
+          <InputDash placeholder="Digite seu telefone" type="text" value={phoneBuffet}  onChange={(e) => formatPhoneNumber(e)} required={true}/>
         </Box>
         {typeSignature === 'Premium'? 
         <Box>

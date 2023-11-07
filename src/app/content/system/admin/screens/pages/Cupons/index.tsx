@@ -74,7 +74,7 @@ const Cupons = () =>{
 
         <Box tag="table">
           <TableHead>
-            <TableRow>
+            <TableRow styleSheet={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
               <TableCell><p>Código</p></TableCell>
               <TableCell><p>Valor do plano</p> <FilterArrows functionupArrow={orderByGrowing} functionDownArrow={orderByDescending} property="valor"/></TableCell>
               <TableCell><p>Desconto (%)</p> <FilterArrows functionupArrow={orderByGrowing} functionDownArrow={orderByDescending} property="porcentagem"/></TableCell>
@@ -87,7 +87,7 @@ const Cupons = () =>{
 
           <TableBody>
             {cupons.map((item, index)=>(
-              <TableRow key={index} >
+              <TableRow key={index} styleSheet={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                 <TableCell>{item?.['codigo']}</TableCell>
                 <TableCell>{`R$ ${item?.['valor']}`}</TableCell>
                 <TableCell>{`${item?.['porcentagem']} %`}</TableCell>

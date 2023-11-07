@@ -119,13 +119,12 @@ const Notifications = () => {
     <Box styleSheet={{
       backgroundColor: theme.colors.primary.x1900,
       width: '66px',
-      height: '65px',
+      height: '70px',
       borderRadius: '8px',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-
-     }}  >
+     }}>
       <Icon  onClick={() => openModal(recentProposals)} name='notifications' styleSheet={{cursor: 'pointer', height: '30px', width: '30px', objectFit: 'contain', justifyContent: 'center', alignItems: 'center', marginTop: '1.2rem'}} />
       {newProposalsCount > 0 && (
         <div  style={{ background: 'red', color: 'white', width: '20px',  borderRadius: '100px', position: 'relative', top: '-3.5rem', right: '-2rem', 
@@ -149,7 +148,7 @@ const Notifications = () => {
     }}
   >
   
-    <Box tag="table" styleSheet={{ width: '50%', backgroundColor: theme.colors.neutral.x050, borderRadius: '8px', height: 'auto'}}>
+    <Box tag="table" styleSheet={{ width: '60%', backgroundColor: theme.colors.neutral.x050, borderRadius: '8px', height: 'auto'}}>
   
   <TableHead>
     <Box styleSheet={{display: 'flex', justifyContent: 'space-between', flexDirection: 'row'}}>
@@ -186,7 +185,7 @@ const Notifications = () => {
   
   <TableBody >
     {dataUser?.['usuario']?.id_perfil === 3 && (
-      recentProposals.map((item, index) => (
+      recentProposals.length > 0 ?recentProposals.map((item, index) => (
         <TableRow key={index} styleSheet={{alignItems: 'center'}}>
           <Text>{item?.['id']}</Text>
           <Text styleSheet={{textAlign: 'left'}}>{item?.entidade?.nome}</Text>
@@ -194,11 +193,11 @@ const Notifications = () => {
             Marcar como Lida
           </Button>
         </TableRow>
-      ))
+      )): <Text styleSheet={{margin: '4rem auto'}}>Não há novas notificações</Text>
     )}
 
     {dataUser?.['usuario']?.id_perfil === 2 && (
-      recentProposals.map((item, index) => (
+      recentProposals.length > 0 ? recentProposals.map((item, index) => (
         <TableRow key={index} styleSheet={{alignItems: 'center'}}>
           <Text>{item?.['id']}</Text>
           <Text styleSheet={{textAlign: 'left'}}>{item?.['nome']}</Text>
@@ -206,11 +205,11 @@ const Notifications = () => {
             Marcar como Lida
           </Button>
         </TableRow>
-      ))
+      )): <Text styleSheet={{margin: '4rem auto'}}>Não há novas notificações</Text>
     )}
 
 {dataUser?.['usuario']?.id_perfil === 1 && (
-      usersAndSignatures.map((item, index) => (
+      usersAndSignatures.length > 0 ? usersAndSignatures.map((item, index) => (
         <TableRow key={index} styleSheet={{alignItems: 'center'}}>
           <Text>{item?.['id']}</Text>
           <Text styleSheet={{textAlign: 'left'}}>{item?.['nome']}</Text>
@@ -218,7 +217,7 @@ const Notifications = () => {
             Marcar como Lida
           </Button>
         </TableRow>
-      ))
+      )) : <Text styleSheet={{margin: '4rem auto'}}>Não há novas notificações</Text>
     )}
 
     

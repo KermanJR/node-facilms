@@ -804,6 +804,31 @@ export default class BuffetService {
 
   //Galeria Do Buffet ////////////////////////////////////////////////////////////////
 
+  static async postFileBuffetImageOne(data) {
+    const url = `${API_URL_BUSCABUFFET}/arquivos`;
+    const bearerToken = localStorage.getItem('USER_TOKEN');
+
+    console.log(data)
+    const formData = new FormData();
+    formData.append('nome', data?.selectedImageOne?.name);
+    formData.append('tipo', data?.tipo);
+    formData.append('anexo', data?.selectedImageOne);
+
+    try {
+      const response = await axios.post(url, formData, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao fazer o upload da galeria do buffet:', error);
+      throw error;
+    }
+  }
+
   static async postFileBuffet(imageFile) {
     const url = `${API_URL_BUSCABUFFET}/arquivos`;
     const bearerToken = localStorage.getItem('USER_TOKEN');
@@ -811,6 +836,56 @@ export default class BuffetService {
     const formData = new FormData();
     formData.append('nome', imageFile?.name);
     formData.append('anexo', imageFile);
+
+    try {
+      const response = await axios.post(url, formData, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao fazer o upload da galeria do buffet:', error);
+      throw error;
+    }
+  }
+
+  static async postFileBuffetImageTwo(data) {
+    const url = `${API_URL_BUSCABUFFET}/arquivos`;
+    const bearerToken = localStorage.getItem('USER_TOKEN');
+
+    console.log(data)
+    const formData = new FormData();
+    formData.append('nome', data?.selectedImageTwo?.name);
+    formData.append('tipo', data?.tipo);
+    formData.append('anexo', data?.selectedImageTwo);
+
+    try {
+      const response = await axios.post(url, formData, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao fazer o upload da galeria do buffet:', error);
+      throw error;
+    }
+  }
+
+  static async postFileBuffetImageThree(data) {
+    const url = `${API_URL_BUSCABUFFET}/arquivos`;
+    const bearerToken = localStorage.getItem('USER_TOKEN');
+
+    console.log(data)
+    const formData = new FormData();
+    formData.append('nome', data?.imageFile?.name);
+    formData.append('tipo', data?.tipo);
+    formData.append('anexo', data?.imageFile);
 
     try {
       const response = await axios.post(url, formData, {
@@ -1188,6 +1263,24 @@ export default class BuffetService {
       return response.data;
     } catch (error) {
       console.error('Erro ao fazer o upload da galeria do buffet:', error);
+      throw error;
+    }
+  }
+
+  ///Recuperação de senha
+  static async recoveryPassword(data): Promise<any> {
+    const url = `${API_URL_BUSCABUFFET}/usuarios/recovery`;
+    const bearerToken = localStorage.getItem('USER_TOKEN');
+    try {
+      const response = await axios.post(url, data, {
+        headers: {
+          Authorization: `Bearer ${bearerToken}`,
+        },
+      });
+  
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao tentar recuperar a senha:', error);
       throw error;
     }
   }

@@ -14,6 +14,7 @@ import useSize from "@src/app/theme/helpers/useSize";
 import ModalBudget from "../HomeScreen/Components/Modals/BudgetModal";
 import Image from "@src/app/theme/components/Image/Image";
 import Logo from '../../../../../../public/assets/logo_buffet.svg'
+import ModalRecoveryPassword from "../HomeScreen/Components/Modals/RecoveryPassword";
 export default function Contact(){
 
     const isMobile = useResponsive()
@@ -21,12 +22,16 @@ export default function Contact(){
     const size = useSize();
 
     const {
+      isModalOpen,
+      closeModal,
       isNovoModalOpen,
       closeNovoModal,
+      closeBudgetModal,
       isModalOpenBudget,
-      closeBudgetModal
+      isModalRecoveryPassword,
+      closeRecoveryPassword,
+      openRecoveryPassword
     } = useContext(ModalContext)
-
   
     return(
         <Box tag="main"
@@ -43,6 +48,10 @@ export default function Contact(){
 
           {isModalOpenBudget &&(
             <ModalBudget isOpen={isModalOpenBudget} onClose={closeBudgetModal} />
+          )}  
+
+{isModalRecoveryPassword &&(
+            <ModalRecoveryPassword isOpen={isModalRecoveryPassword} onClose={closeRecoveryPassword} />
           )}  
 
           {/*Banner Principal*/}      

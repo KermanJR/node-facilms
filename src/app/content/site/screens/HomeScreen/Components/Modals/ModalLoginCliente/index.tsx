@@ -13,14 +13,14 @@ import IconPassword from '../../../../../../../../../public/assets/icons/passwor
 import IconUser from '../../../../../../../../../public/assets/icons/user_svg.jpg'
 import IconEmail from '../../../../../../../../../public/assets/icons/email_svg.jpg'
 import GoogleLoginButton from "../../GoogleLoginButton";
-import Button from '@mui/material/Button';
+import { Button as BtnMaterial} from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import password from "@src/app/theme/components/Icon/svgs/password";
 import BuffetService from "@src/app/api/BuffetService";
 import { UserContext } from "@src/app/context/UserContext";
 import useSize from "@src/app/theme/helpers/useSize";
 import IconCnpj from '../../../../../../../../../public/assets/icons/cil_building.jpg'
-
+import Button from "@src/app/theme/components/Button/Button";
 export default function ModalBudgetCliente({ isOpen, onClose }) {
   const theme = useTheme();
 
@@ -130,7 +130,7 @@ export default function ModalBudgetCliente({ isOpen, onClose }) {
           type="submit"
           variant="contained"
           onClick={onClose}
-          style={{
+          styleSheet={{
             backgroundColor: theme.colors.secondary.x500,
             borderRadius: '20px',
             position: 'relative',
@@ -156,7 +156,7 @@ export default function ModalBudgetCliente({ isOpen, onClose }) {
             <Input 
               type="text" 
               required={true}
-              placeholder="Nome do seu espaço"
+              placeholder="Insira seu nome"
               onChange={(e)=>setNome(e)}
               styleSheet={{
                 width: '100%',
@@ -176,7 +176,7 @@ export default function ModalBudgetCliente({ isOpen, onClose }) {
             <Input 
               type="text" 
               required={true}
-              placeholder="CNPJ"
+              placeholder="CPF"
               onChange={(e)=>setDocumento(e)}
               styleSheet={{
                 width: '101%',
@@ -233,7 +233,7 @@ export default function ModalBudgetCliente({ isOpen, onClose }) {
               <Text variant="body1">Eu concordo com todas as declarações incluídas nos <b>Termos de Uso</b></Text>
           </Box>
           
-          <Button
+          <BtnMaterial
           type="submit"
           variant="contained"
           
@@ -245,7 +245,7 @@ export default function ModalBudgetCliente({ isOpen, onClose }) {
           startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : null}
         >
           {isLoading ? <Text color={theme.colors.neutral.x000}>Entrando...</Text> : <Text  color={theme.colors.neutral.x000}>Confirmar</Text>}
-        </Button>
+        </BtnMaterial>
           <Box styleSheet={{display: 'flex', flexDirection: 'row', gap: '1rem'}}>
             <Text styleSheet={{textAlign: 'left', color: theme.colors.neutral.x999}} variant="body1">Você tem uma conta?</Text>
             <Box onClick={openNovoModal} styleSheet={{cursor: 'pointer'}}>

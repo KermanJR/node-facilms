@@ -47,12 +47,11 @@ const handlePageChange = (pageNumber) => {
   }
 
 
-
   return (
     <Box tag="section" styleSheet={{marginTop: '2rem'}}>
 
       <Box styleSheet={{display: 'grid', gridTemplateColumns: !(size < 450) ? 'repeat(3, 33%)' : '100%', gap: '2rem'}}>
-        {dataBuffet?.slice((currentPage-1)*elementsPerPage, currentPage* elementsPerPage).map(result => (
+        {dataBuffet?.slice((currentPage-1)*elementsPerPage, currentPage* elementsPerPage).map((result: any) => (
           <Box
           key={result?.['id']} 
           onClick={(e)=>handleChangeIdBuffet(result)}
@@ -79,7 +78,9 @@ const handlePageChange = (pageNumber) => {
                   objectFit: 'cover'
                 }}
                 alt="image-card-home"
-                src={`https://buscabuffet.com.br/api/uploads/${result?.['galerias'][1]?.['arquivo']?.['nome']}`}
+                src={`https://buscabuffet.com.br/api/uploads/${
+                  (result?.galerias?.find(image => image.arquivo.tipo === 'card') || {}).arquivo.nome
+                }`}
               />
 
               {
@@ -98,6 +99,43 @@ const handlePageChange = (pageNumber) => {
                   {result?.['entidade']?.['assinaturas'][0]?.['plano']?.['nome']}</Text>
               </Button>: ''
               }
+
+              {
+                result?.['entidade']?.['assinaturas'][0]?.['plano']?.['nome'] == 'Premium' &&  result?.['entidade']?.destacado == '1' && (
+                <Button 
+                styleSheet={{
+                  position: 'absolute',
+                  marginLeft: '1rem',
+                  marginTop: '1rem'
+                  }} 
+                  size="lg" 
+                  textVariant="body1"
+                  colorVariant="complementar"
+              >
+                <Text variant="small" styleSheet={{fontWeight: 'bold'}}>
+                  {result?.['entidade']?.['assinaturas'][0]?.['plano']?.['nome']} | Destacado</Text>
+              </Button>)
+              }
+
+              {
+                result?.['entidade']?.destacado == '1' && (
+                <Button 
+                styleSheet={{
+                  position: 'absolute',
+                  marginLeft: '1rem',
+                  marginTop: '1rem'
+                  }} 
+                  size="lg" 
+                  textVariant="body1"
+                  colorVariant="complementar"
+              >
+                <Text variant="small" styleSheet={{fontWeight: 'bold'}}>
+                   Destacado</Text>
+              </Button>)
+              }
+
+
+
              
             </Box>
 

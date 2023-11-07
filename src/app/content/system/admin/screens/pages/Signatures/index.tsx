@@ -60,7 +60,7 @@ const Signatures = () =>{
 
         <Box tag="table">
           <TableHead>
-            <TableRow>
+            <TableRow styleSheet={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
               <TableCell><p>ID</p> <FilterArrows functionupArrow={orderByGrowing} functionDownArrow={orderByDescending} property="id"/></TableCell>
               <TableCell><p>Data</p> <FilterArrows functionupArrow={orderByDateGrowing} functionDownArrow={orderByDateDescending} property="updated_at"/></TableCell>
               <TableCell><p>Nome</p> <FilterArrows functionupArrow={orderByStringGrowing} functionDownArrow={orderByStringDescending} property="entidade.nome"/></TableCell>
@@ -72,7 +72,7 @@ const Signatures = () =>{
 
           <TableBody>
             {signatures.slice(viewElements, viewElements + 20).map((item, index)=>(
-              <TableRow key={index} >
+              <TableRow key={index} styleSheet={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                 <TableCell>{item?.['id']}</TableCell>
                 <TableCell>{new Date(item?.['updated_at']).toLocaleDateString()}</TableCell>
                 <TableCell>{item?.['entidade']['nome']}</TableCell>
@@ -98,7 +98,7 @@ const Signatures = () =>{
                 )}
 
 
-                {item.status === 'Aprovado' && (
+                {item.status === 'ACTIVE' && (
                   <Box tag="td"
                   styleSheet={{
                     padding: '.7rem',
@@ -111,12 +111,12 @@ const Signatures = () =>{
                       textAlign: 'center'
                     }}
                   >
-                    {item?.['status']}
+                    Ativo
                   </Text>
                  
                 </Box>
                 )}
-                {(item.status === "Avaliação" || item.status == null) && (
+                {(item.status === "OVERDUE" || item.status == null) && (
                   <Box tag="td"
                   styleSheet={{
                     padding: '.7rem',
@@ -129,13 +129,13 @@ const Signatures = () =>{
                       textAlign: 'center'
                     }}
                   >
-                    {item?.['status'] ?? 'NULL'}
+                    Pendente
                   </Text>
                  
                 </Box>
                 )}
 
-{item.status === 'Pendente'  && (
+              {item.status === 'CANCELED'  && (
                   <Box tag="td"
                   styleSheet={{
                     padding: '.7rem',
@@ -149,7 +149,7 @@ const Signatures = () =>{
                       textAlign: 'center'
                     }}
                   >
-                    Pendente
+                    Cancelada
                   </Text>
                 
                 </Box>

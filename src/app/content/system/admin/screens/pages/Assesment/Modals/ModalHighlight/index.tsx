@@ -22,15 +22,17 @@ const ModalHighlight = ({isModalOpenHighLight, setIsModalOpenHighlight, index, n
     })
   }, [])
 
+  console.log(user)
+
   function updateHighlight() {
-    switch (user.entidade.destacado) {
+    switch (user?.entidade?.destacado) {
       case '0':
         user.entidade.destacado = '1'
-        BuffetService.editUser(user.entidade, user.entidade.id)
+        BuffetService.editUser(user.entidade.id, user.entidade)
         break;
       case '1':
         user.entidade.destacado = '0'
-        BuffetService.editUser(user.entidade, user.entidade.id)
+        BuffetService.editUser(user.entidade.id, user.entidade)
     }
   }
 

@@ -8,12 +8,19 @@ import ImageBanner from '../../../../../../../../public/assets/images/banner_sin
 export default function Banner({data}){
 
     const theme = useTheme();
+    const imagens = data?.galerias;
+ 
+
+
+    const imagemCapa = imagens?.find(imagem => imagem?.arquivo?.tipo === 'capa');
+    console.log(imagemCapa?.arquivo?.path)
+
     return(
         <Box tag="div"
             styleSheet={{
                 width: '100%',
                 height: '487px',
-                background: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(https://buscabuffet.com.br/api/uploads/${data?.galerias?.length > 0 ? data?.galerias[0]?.arquivo?.nome : ''})`,
+                background: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(https://buscabuffet.com.br/api/uploads/${data?.galerias?.length > 0 && imagemCapa?.arquivo?.nome})`,
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 display: 'flex',

@@ -1,4 +1,5 @@
 import { UserContext } from '@src/app/context/UserContext';
+import Box from '@src/app/theme/components/Box/Box';
 import { useContext, useEffect, useState } from 'react';
 
 export const GoogleLoginButton = () => {
@@ -19,7 +20,7 @@ export const GoogleLoginButton = () => {
     window.google?.accounts?.id.initialize({
       client_id: "1033991996623-9iuk41181n8bsmnh22qdhm07g626esbt.apps.googleusercontent.com",
       callback: handleCredentialResponse,
-      auto_select: false
+      auto_select: false,
     });
 
     // Renderizar o botão
@@ -31,10 +32,14 @@ export const GoogleLoginButton = () => {
         shape: "pill",
         text: "sign_in_with",
         logo_alignment: "center",
-
       }
     );
 
+    // Aplicar um estilo personalizado para o botão
+    const googleButtonElement = document.querySelector(".google-accounts-id-render-button");
+    if (googleButtonElement) {
+      googleButtonElement.style.width = "500";
+    }
   }, []);
 
   const decodePayload = (tokenId) => {
@@ -52,7 +57,7 @@ export const GoogleLoginButton = () => {
 
   return (
     <>
-      <div id="googleButton" style={{margin: '0 auto', width: '450px'}}></div>
+      <div id="googleButton" style={{margin: '0 auto', width: '450px', display: 'flex', flexDirection: 'row', justifyContent: 'center'}} ></div>
       <span style={{display: 'inline-block', width: '80%', height: '3px', margin: '0 auto', backgroundColor: '#EA760A88'}}></span>
     </>
   );

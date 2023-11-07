@@ -15,22 +15,20 @@ import { useRouter } from "next/router";
 import { Button as BtnMaterial } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import Button from "@src/app/theme/components/Button/Button";
-export default function ModalLogin({ isOpen, onClose }) {
+import email from "@src/app/theme/components/Icon/svgs/email";
+
+export default function ModalRecoveryPassword({ isOpen, onClose }) {
   const theme = useTheme();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
-  const {
-    openNovoModal,
-    isModalOpen,
-    setModalOpen,
-    openRecoveryPassword,
-    closeRecoveryPassword
-  } = useContext(ModalContext)
+
+  const [message, setMessage] = useState('');
 
   const {
     setEmail,
     setPassword,
+    email,
     setErrorLogin,
     setSuccessLogin,
     login, 
@@ -44,22 +42,37 @@ export default function ModalLogin({ isOpen, onClose }) {
   const handleSubmit = (e) => {
     setIsLoading(true)
     e.preventDefault();
-    login();
-    setIsLoading(false)
+    const data = {
+      "email": email,
+      "url": "https://buscabuffet.com.br"
+    }
+    BuffetService.recoveryPassword(data)
+    .then(res=>{
+      if(res?.message === "E-mail enviado com sucesso"){
+        setMessage('E-mail enviado com sucesso.')
+      }
+    }).catch(err=>{
+      if(err?.response?.data?.message == "Not Found"){
+        setMessage("Usuário não encontrado.")
+      }
+    })
+    setTimeout(()=>{
+      setIsLoading(false)
+    }, 1300)
+    
   };
 
   useEffect(() => {
     const clearMessages = () => {
       setTimeout(() => {
-        setErrorLogin(null);
-        setSuccessLogin(null);
+        setMessage('');
       }, 3000);
     };
 
-    if (errorLogin || successLogin) {
+    if (message) {
       clearMessages();
     }
-  }, [errorLogin, successLogin]);
+  }, [message]);
 
 
   return (
@@ -109,16 +122,13 @@ export default function ModalLogin({ isOpen, onClose }) {
           X
       </Button>
       
-        <Box tag="form" styleSheet={{display: 'flex', flexDirection: 'column', gap: '1rem', paddingTop: '1rem'}} onSubmit={handleSubmit}>
+        <Box tag="form" styleSheet={{display: 'flex', flexDirection: 'column', gap: '1rem', paddingTop: '.5rem'}} onSubmit={handleSubmit}>
           <Box styleSheet={{textAlign: 'center', display: 'flex', flexDirection: 'row', alignSelf: 'center', padding: '0 2rem', gap: '.5rem'}}>
-            <Text variant="heading5">Bem vindo de volta ao</Text>
-            <Text  variant="heading4" styleSheet={{fontWeight: 'bold', marginTop: '-.19rem'}}>Busca Buffet !</Text>
+            <Text variant="heading4" styleSheet={{fontWeight: 'bold'}}>Recuperação de senha</Text>
           </Box>
 
 
-          <GoogleLoginButton/>
-
-
+      
           <Box styleSheet={{display: 'flex', flexDirection: 'row',  alignContent: 'center', justifyContent: 'center', padding: '0 2rem'}}>
             <Box styleSheet={{borderRadius: '1px', backgroundColor: theme.colors.neutral.x000, padding: '.6rem'}}>
             <Image src={IconEmail.src} alt="" styleSheet={{width: '28px'}}/>
@@ -137,29 +147,10 @@ export default function ModalLogin({ isOpen, onClose }) {
               }}
             />
           </Box>
-          <Box styleSheet={{display: 'flex', flexDirection: 'row',  alignItems: 'center', justifyContent: 'center', padding: '0 2rem'}}>
-            <Box styleSheet={{borderRadius: '1px', backgroundColor: theme.colors.neutral.x000, padding: '.6rem'}}>
-            <Image src={IconPassword.src} alt="" styleSheet={{width: '28px'}}/>
-            </Box>
-            <Input 
-              type="password" 
-              placeholder="Insira sua senha"
-              onChange={(e)=>setPassword(e)}
-              required={true}
-              styleSheet={{
-                width: '100%',
-                borderRadius: '1px',
-                backgroundColor: theme.colors.neutral.x000,
-                padding: '.8rem',
-                border: 'none',
-                height: '47px'
-              }}
-            />
-          </Box>
           <BtnMaterial
           type="submit"
           variant="contained"
-          
+
           disabled={isLoading}
           style={{
             backgroundColor: theme.colors.secondary.x500,
@@ -167,21 +158,18 @@ export default function ModalLogin({ isOpen, onClose }) {
           }}
           startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : null}
         >
-          {isLoading ? <Text color={theme.colors.neutral.x000}>Entrando...</Text> : <Text  color={theme.colors.neutral.x000}>Entrar</Text>}
+          {isLoading ? <Text color={theme.colors.neutral.x000}>Enviando...</Text> : <Text  color={theme.colors.neutral.x000}>Recuperar senha</Text>}
         </BtnMaterial>
-          {errorLogin && (
-            <Text color={theme.colors.negative.x700}>{errorLogin}</Text>
-          )}
-          {successLogin && (
-            <Text color={theme.colors.positive.x700}>{successLogin}</Text>
-          )}
-          <Box styleSheet={{display: 'flex', flexDirection: 'row', gap: '1rem'}}>
-            <Text styleSheet={{textAlign: 'left', color: theme.colors.neutral.x999}} variant="body1">Esqueceu sua senha?</Text>
-              <Box  onClick={openRecoveryPassword} styleSheet={{cursor: 'pointer'}}>
-                <Text styleSheet={{color: theme.colors.secondary.x500}}>Redefinir senha</Text>
-              </Box>
-          </Box>
 
+        <Box styleSheet={{height: '20px'}}>
+        {message == "Usuário não encontrado." && (
+            <Text color={theme.colors.negative.x700}>Usuário não encontrado.</Text>
+          )}
+          {message == "E-mail enviado com sucesso." && (
+            <Text color={theme.colors.positive.x700}>E-mail enviado com sucesso, por favor, verifique sua caixa de entrada.</Text>
+          )}
+        </Box>
+          
         </Box>
       </Box>
     </Box>

@@ -89,13 +89,13 @@ const Homedash = () =>{
   
 
 
-  console.log(viewPayments)
-  
+
 
   return(
     <Box styleSheet={{height: '140vh'}}>
-      <Box styleSheet={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '1rem'}}>
-        <BoxDash styleSheet={{flexDirection: 'row', justifyContent: 'space-between', gap: '2rem'}}>
+      <Box styleSheet={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '0rem'}}>
+
+        <BoxDash styleSheet={{flexDirection: 'row', justifyContent: 'left', width: '24%', gap: '1rem'}}>
           <Box styleSheet={{
             height: '84px',
             width: '84px',
@@ -112,7 +112,8 @@ const Homedash = () =>{
             <Text tag="p" color={theme.colors.neutral.x999}>Total de buffets</Text>
           </Box>
         </BoxDash>
-        <BoxDash styleSheet={{flexDirection: 'row', justifyContent: 'left', gap: '2rem'}}>
+
+        <BoxDash styleSheet={{flexDirection: 'row', justifyContent: 'left', gap: '1rem', width: '24%'}}>
           <Box styleSheet={{
             height: '84px',
             width: '84px',
@@ -129,7 +130,8 @@ const Homedash = () =>{
             <Text tag="p" color={theme.colors.neutral.x999}>Pagamentos</Text>
           </Box>
         </BoxDash>
-        <BoxDash styleSheet={{flexDirection: 'row', justifyContent: 'left', gap: '2rem'}}>
+
+        <BoxDash styleSheet={{flexDirection: 'row', justifyContent: 'left', gap: '1rem', width: '24%'}}>
           <Box styleSheet={{
             height: '84px',
             width: '84px',
@@ -143,10 +145,11 @@ const Homedash = () =>{
           </Box>
           <Box>
             <Text variant="display1" tag="p" color={theme.colors.neutral.x999}>{totalProposal}</Text>
-            <Text tag="p" color={theme.colors.neutral.x999}>Orçamentos enviados</Text>
+            <Text tag="p" color={theme.colors.neutral.x999} styleSheet={{flexWrap: 'wrap', width: '90%'}}>Orçamentos enviados</Text>
           </Box>
         </BoxDash>
-        <BoxDash styleSheet={{flexDirection: 'row', justifyContent: 'left', gap: '2rem'}}>
+
+        <BoxDash styleSheet={{flexDirection: 'row', justifyContent: 'left', gap: '1rem', width: '24%'}}>
           <Box styleSheet={{
             height: '84px',
             width: '84px',
@@ -160,9 +163,10 @@ const Homedash = () =>{
           </Box>
           <Box>
             <Text variant="display1" tag="p" color={theme.colors.neutral.x999}>{totalUsers}</Text>
-            <Text tag="p" color={theme.colors.neutral.x999}>Total de usuários</Text>
+            <Text tag="p" color={theme.colors.neutral.x999} styleSheet={{flexWrap: 'wrap', width: '90%'}}>Total de usuários</Text>
           </Box>
         </BoxDash>
+
       </Box>
       
 
@@ -202,8 +206,8 @@ const Homedash = () =>{
         </Box>
 
         <Box tag="table">
-        <TableHead>
-            {loading && <TableRow>
+        <TableHead >
+            {loading && <TableRow styleSheet={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
               <TableCell><p>ID</p> <FilterArrows functionupArrow={orderByGrowing} functionDownArrow={orderByDescending} property="id"/></TableCell>
               <TableCell><p>Data</p> <FilterArrows functionupArrow={orderByDateGrowing} functionDownArrow={orderByDateDescending} property="updated_at"/></TableCell>
               <TableCell><p>Nome</p> <FilterArrows functionupArrow={orderByStringGrowing} functionDownArrow={orderByStringDescending} property="entidade.nome"/></TableCell>
@@ -215,7 +219,7 @@ const Homedash = () =>{
 
           <TableBody>
             {viewPayments.slice(viewElements, viewElements + 20).map((item, index)=>(
-              <TableRow key={index} >
+              <TableRow key={index} styleSheet={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                 <TableCell>{item?.['id']}</TableCell>
                 <TableCell>{new Date(item?.['updated_at']).toLocaleDateString()}</TableCell>
                 <TableCell>{item?.['entidade']['nome']}</TableCell>

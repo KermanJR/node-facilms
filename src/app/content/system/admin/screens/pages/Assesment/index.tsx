@@ -52,23 +52,30 @@ const Assesment = () =>{
   };
   
 
+  console.log(buffets)
   const EventActionPopup = () => (
     <Box styleSheet={{ 
-      width: '66px',
+      width: '50px',
       height: '40px',
+      margin: '0 auto',
+      textAlign: 'center',
       display: 'flex',
       flexDirection: 'row',
       gap: '8px' ,
       borderRadius: '4px',
       padding: '4px',
       position: 'absolute',
-      right: '3rem',
-      top: '-1rem',
+      justifyContent: 'center',
+      right: '8rem',
+      top: '-2rem',
       backgroundColor: theme.colors.neutral.x000,
       boxShadow: `0px 4px 4px 0px ${theme.colors.neutral.x050}`,
     }}>
-      <Icon name="star" onClick={(e) => setIsModalOpenHighlight(!isModalOpenHighlight)}/>
-      <Icon name="edit" onClick={(e)=> setIsModalOpenEdit(!isModalOpenEdit)}/>
+
+
+        <Icon name="star"  onClick={(e) => setIsModalOpenHighlight(!isModalOpenHighlight)}/>
+      
+
     </Box>
   );
 
@@ -82,10 +89,7 @@ const Assesment = () =>{
         )
       }
 
-      {isModalOpenEdit &&(
-        <ModalDashboardEdit isModalOpenEdit={isModalOpenEdit} setIsModalOpenEdit={setIsModalOpenEdit}/>
-        )
-      }
+     
 
       <Box 
         styleSheet={{

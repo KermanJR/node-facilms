@@ -17,6 +17,7 @@ import BuffetService from "@src/app/api/BuffetService";
 import { UserContext } from "@src/app/context/UserContext";
 import useFormatarMoeda from "@src/app/theme/helpers/useFormatarMoeda";
 import PagBankService from "@src/app/api/PagBankService";
+import ModalRecoveryPassword from "../HomeScreen/Components/Modals/RecoveryPassword";
 export default function Plans(){
 
   //hooks
@@ -34,13 +35,18 @@ export default function Plans(){
 
 
   //Contexts
+
+  
   const {
     isModalOpen,
     closeModal,
     isNovoModalOpen,
     closeNovoModal,
     closeBudgetModal,
-    isModalOpenBudget
+    isModalOpenBudget,
+    isModalRecoveryPassword,
+    closeRecoveryPassword,
+    openRecoveryPassword
   } = useContext(ModalContext)
 
     const {
@@ -98,6 +104,10 @@ export default function Plans(){
           {isModalOpenBudget &&(
             <ModalBudget isOpen={isModalOpenBudget} onClose={closeBudgetModal} />
           )}  
+
+{isModalRecoveryPassword &&(
+            <ModalRecoveryPassword isOpen={isModalRecoveryPassword} onClose={closeRecoveryPassword} />
+          )} 
 
         {/*Banner Principal*/}      
         <Box styleSheet={{

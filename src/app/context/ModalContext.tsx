@@ -5,13 +5,17 @@ interface ModalContextType {
   isModalOpen: boolean;
   isNovoModalOpen: boolean,
   isModalOpenBudget: boolean,
-
+  isModalRecoveryPassword: boolean,
   openModal: () => void;
   closeModal: () => void;
   openNovoModal: () => void;
   closeNovoModal: () => void,
   openBudgetModal: () => void;
   closeBudgetModal: () => void,
+
+  openRecoveryPassword: ()=>void,
+  closeRecoveryPassword: ()=>void,
+
   setIsNovoModalOpen: Dispatch<SetStateAction<boolean>>;
   setModalOpen: Dispatch<SetStateAction<boolean>>;
   setModalBudgetOpen: Dispatch<SetStateAction<boolean>>;
@@ -21,6 +25,10 @@ const defaultContextData: ModalContextType = {
   isModalOpen: false,
   isNovoModalOpen: false,
   isModalOpenBudget: false,
+  isModalRecoveryPassword: false,
+
+  openRecoveryPassword: ()=>{},
+  closeRecoveryPassword: ()=>{},
 
   openNovoModal: () => {},
   openModal: () => {},
@@ -33,6 +41,8 @@ const defaultContextData: ModalContextType = {
   setModalBudgetOpen: ()=>{},
   setModalOpen: ()=>{},
   setIsNovoModalOpen: ()=>{},
+
+
   
 };
 
@@ -51,6 +61,9 @@ export const ModalProvider: React.FC<Props> = ({ children }: Props) => {
   const [isModalOpenBudget, setModalBudgetOpen] = useState<boolean>(false);
   const [isNovoModalOpen, setIsNovoModalOpen] = useState<boolean>(false); // Novo estado para o novo modal
 
+  const [isModalRecoveryPassword, setIsModalRecoveryPassword] = useState<boolean>(false); // Novo estado para o novo modal
+
+
   const openModal = () => {
     setModalOpen(true);
   };
@@ -66,13 +79,22 @@ export const ModalProvider: React.FC<Props> = ({ children }: Props) => {
   const closeBudgetModal = () => {
     setModalBudgetOpen(false);
   };
+
+  const openRecoveryPassword = ()=>{
+    setIsModalRecoveryPassword(true)
+    setModalOpen(false); // Fechar o modal existente
+    setModalBudgetOpen(false); // Fechar o modal existente
+    setIsNovoModalOpen(false);
+  }
+
+  const closeRecoveryPassword = ()=>{
+    setIsModalRecoveryPassword(false)
+  }
   
   const openNovoModal = () => {
     setModalOpen(false); // Fechar o modal existente
     setModalBudgetOpen(false); // Fechar o modal existente
-    setTimeout(() => {
-      setIsNovoModalOpen(true); // Abrir o novo modal após um breve atraso para animações
-    }, 300); // Ajuste o tempo conforme necessário
+    setIsNovoModalOpen(true);
   };
 
   const closeNovoModal = () => {
@@ -86,6 +108,9 @@ export const ModalProvider: React.FC<Props> = ({ children }: Props) => {
         isModalOpen,
         isNovoModalOpen,
         isModalOpenBudget,
+        isModalRecoveryPassword,
+        openRecoveryPassword,
+        closeRecoveryPassword,
         setModalOpen,
         openModal,
         closeModal,

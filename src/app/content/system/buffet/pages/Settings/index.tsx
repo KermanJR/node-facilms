@@ -232,11 +232,23 @@ const Settings = () =>{
       </Box>
       <Box>
         <Text>Valor</Text>
-        <InputDash placeholder="Digite o e-mail" type="text" disabled={true} value={(dadosAssinatura['amount']?.value/100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} styleSheet={{backgroundColor: theme.colors.neutral.x200}}/>
+        <InputDash 
+          placeholder="Digite o e-mail" 
+          type="text" 
+          disabled={true} 
+          value={(dadosAssinatura['amount']?.value/100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} 
+          styleSheet={{backgroundColor: theme.colors.neutral.x200}}
+        />
       </Box>
       <Box>
         <Text>Status da assinatura</Text>
-        <InputDash placeholder="Digite o e-mail" type="text" disabled={true} value={dadosAssinatura?.['status']} styleSheet={{backgroundColor: theme.colors.neutral.x200}}/>
+        <InputDash 
+          placeholder="Digite o e-mail" 
+          type="text" 
+          disabled={true} 
+          value={dadosAssinatura?.['status']} 
+          styleSheet={{backgroundColor: theme.colors.neutral.x200}}
+        />
       </Box>
     </Box>
 
@@ -249,7 +261,7 @@ const Settings = () =>{
           type="text"
           value={nomeAssinante}  
           onChange={(e)=>setNomeAssinante(e)}
-          styleSheet={{backgroundColor: theme.colors.neutral.x200}}
+          styleSheet={{backgroundColor: theme.colors.neutral.x200, paddingRight: '0'}}
         />
       </Box>
        <Box>
@@ -259,7 +271,7 @@ const Settings = () =>{
          type="text"
          onChange={(e)=>setEmailAssinante(e)}
           value={emailAssinante} 
-          styleSheet={{backgroundColor: theme.colors.neutral.x200}}/>
+          styleSheet={{backgroundColor: theme.colors.neutral.x200, paddingRight: '0'}}/>
        </Box>
        <Box>
        <Box>
@@ -269,7 +281,7 @@ const Settings = () =>{
           onChange={(e)=>setDocumentoAssinante(e)}
           type="text" 
           value={documentoAssinante} 
-          styleSheet={{backgroundColor: theme.colors.neutral.x200}}/>
+          styleSheet={{backgroundColor: theme.colors.neutral.x200, paddingRight: '0'}}/>
         </Box>
        </Box>
 

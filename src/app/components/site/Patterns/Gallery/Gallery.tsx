@@ -31,6 +31,7 @@ export const Gallery = ({ dataBuffet, isMobile }) => {
         }}
       >
         {dataBuffet?.galerias?.slice(2).map((image, index) => (
+          image?.arquivo?.tipo === "galeria" && (
           <Box
             key={index}
             styleSheet={{
@@ -49,6 +50,8 @@ export const Gallery = ({ dataBuffet, isMobile }) => {
               }}
             />
           </Box>
+          )
+          
         ))}
       </Box>
 

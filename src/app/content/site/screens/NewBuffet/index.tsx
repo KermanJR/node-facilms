@@ -26,6 +26,7 @@ import SendIcon from '@mui/icons-material/Send';
 import PagBankService from "@src/app/api/PagBankService";
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
+import ModalRecoveryPassword from "../HomeScreen/Components/Modals/RecoveryPassword";
 
 
 export default function NewBuffet() {
@@ -51,13 +52,7 @@ export default function NewBuffet() {
     setDataUser
   } = useContext(UserContext);
 
-  const {
-    isNovoModalOpen,
-    closeNovoModal,
-    closeBudgetModal,
-    isModalOpenBudget
-  } = useContext(ModalContext)
-
+  
   
   const theme = useTheme();
   const size = useSize()
@@ -65,10 +60,17 @@ export default function NewBuffet() {
 
   
   const {
-    openNovoModal,
+    isModalOpen,
+    closeModal,
+    isNovoModalOpen,
+    closeNovoModal,
+    closeBudgetModal,
+    isModalOpenBudget,
+    isModalRecoveryPassword,
+    closeRecoveryPassword,
+    openRecoveryPassword,
     setModalOpen
   } = useContext(ModalContext)
- 
  
 
   const handleSubmit = (e) => {
@@ -168,6 +170,9 @@ export default function NewBuffet() {
           {isModalOpenBudget &&(
             <ModalBudget isOpen={isModalOpenBudget} onClose={closeBudgetModal} />
           )}  
+          {isModalRecoveryPassword &&(
+            <ModalRecoveryPassword isOpen={isModalRecoveryPassword} onClose={closeRecoveryPassword} />
+          )} 
       <Box styleSheet={{
         display: 'flex',
         width: size <= 800 ? '100%' : '50%',
@@ -334,12 +339,16 @@ export default function NewBuffet() {
           
           <Box styleSheet={{display: 'flex', flexDirection: 'row', gap: '1rem'}}>
             <Text styleSheet={{textAlign: 'left', color: theme.colors.neutral.x999}} variant="body1">Você tem uma conta?</Text>
-            <Box onClick={openNovoModal} styleSheet={{cursor: 'pointer'}}>
-              <Text styleSheet={{color: theme.colors.secondary.x500}}>Entrar</Text>
+            <Box styleSheet={{cursor: 'pointer'}}>
+              <Text styleSheet={{color: theme.colors.secondary.x500}} onClick={(e)=>router.push('/login')}>Entrar</Text>
             </Box>
           </Box>
-          <Link href="/" styleSheet={{textAlign: 'left', color: theme.colors.neutral.x999}} variant="body1">Esqueceu sua senha?</Link>
-          <Link href="/" styleSheet={{textAlign: 'left'}} colorVariant="secondary" variant="body1">Redefinir senha</Link>
+          <Box  onClick={openRecoveryPassword} styleSheet={{display: 'flex', flexDirection: 'row', gap: '1rem'}}>
+            <Text styleSheet={{textAlign: 'left', color: theme.colors.neutral.x999}} variant="body1">Esqueceu sua senha?</Text>
+              <Box  styleSheet={{cursor: 'pointer'}}>
+                <Text styleSheet={{color: theme.colors.secondary.x500}}>Redefinir senha</Text>
+              </Box>
+          </Box>
           {errors && errors?.map((item, index)=>{
           return <>
             {item?.['message'] === 'unique validation failure' && item?.['field'] === 'email' &&

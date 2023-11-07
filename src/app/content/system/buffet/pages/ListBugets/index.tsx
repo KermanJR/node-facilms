@@ -105,9 +105,9 @@ const ListBudgets = () =>{
           <FilterTableTime payments={orcamentos} setViewPayments={setOrcamentos}/>
         </Box>
 
-        <Box tag="table">
+        <Box tag="table" >
           <TableHead>
-            <TableRow styleSheet={{flexDirection: 'row'}}>
+            <TableRow styleSheet={{display: 'flex', flexDirection: 'row'}}>
               <TableCell>ID orçamento<FilterArrows functionupArrow={orderByGrowing} functionDownArrow={orderByDescending} property="id"/></TableCell>
               <TableCell>Buffet<FilterArrows functionupArrow={orderByGrowing} functionDownArrow={orderByDescending} property="id"/></TableCell>
               <TableCell>Valor<FilterArrows functionupArrow={orderByGrowing} functionDownArrow={orderByDescending} property="id"/></TableCell>
@@ -119,12 +119,12 @@ const ListBudgets = () =>{
 
           <TableBody>
             {orcamentos.slice(viewElements, viewElements + 20).map((item, index)=>(
-              <TableRow key={index}>
+              <TableRow key={index} styleSheet={{display: 'flex', flexDirection: 'row'}}>
                 <TableCell>{item?.['id']}</TableCell>
                 <TableCell>{item?.['evento']?.['nome']}</TableCell>
                 <TableCell>{(item?.['valor']).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</TableCell>
                 <TableCell>{formatarData(item?.['data_disponibilidade'])}</TableCell>
-                <TableCell>{item?.['observacoes']}</TableCell>
+                <TableCell styleSheet={{width: '20%'}}>{item?.['observacoes']}</TableCell>
                 <TableCell styleSheet={{display: 'flex', justifyContent: 'center', alignItems: 'left'}}>
                   <Box onClick={(e)=>DownloadLink(index)}>
                     <Icon name="file" id='downloadLink' />

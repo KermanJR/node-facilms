@@ -12,6 +12,7 @@ import { ModalContext } from "@src/app/context/ModalContext";
 import useSize from "@src/app/theme/helpers/useSize";
 import ModalBudget from "../HomeScreen/Components/Modals/BudgetModal";
 import BuffetService from "@src/app/api/BuffetService";
+import ModalRecoveryPassword from "../HomeScreen/Components/Modals/RecoveryPassword";
 
 export default function AdvertiseWithUsScreen(){
 
@@ -25,7 +26,10 @@ export default function AdvertiseWithUsScreen(){
     isNovoModalOpen,
     closeNovoModal,
     closeBudgetModal,
-    isModalOpenBudget
+    isModalOpenBudget,
+    isModalRecoveryPassword,
+    closeRecoveryPassword,
+    openRecoveryPassword
   } = useContext(ModalContext)
 
   
@@ -50,6 +54,9 @@ export default function AdvertiseWithUsScreen(){
             <ModalBudget isOpen={isModalOpenBudget} onClose={closeBudgetModal} />
           )}  
 
+{isModalRecoveryPassword &&(
+            <ModalRecoveryPassword isOpen={isModalRecoveryPassword} onClose={closeRecoveryPassword} />
+          )}  
 
       {/*Banner Principal*/}      
       <Box styleSheet={{

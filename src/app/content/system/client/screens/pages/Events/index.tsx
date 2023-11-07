@@ -135,11 +135,10 @@ const {
           <button onClick={closeModal} style={{textAlign: 'left', fontWeight: 'bold'}}>X</button>
         <Box tag="table">
           <TableHead >
-            <TableRow styleSheet={{ flexDirection: 'row'}}>
+            <TableRow styleSheet={{display: 'flex', flexDirection: 'row', gap: 'none'}}>
               <TableCell>ID Orçamento</TableCell>
               <TableCell>Nome do Buffet</TableCell>
               <TableCell>Data Disponibilidade</TableCell>
-              <TableCell>QTD. pessoas</TableCell>
               <TableCell>Valor</TableCell>
               <TableCell>Observações</TableCell>
               <TableCell>Arquivo</TableCell>
@@ -149,24 +148,21 @@ const {
 
           <TableBody>
            {
-            selectedProposta.map((item, index)=>(
-            <TableRow key={index} styleSheet={{display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between', gap: 'none'}}>     
-                <TableCell styleSheet={{width: '14%',  }}>{item?.['id']}</TableCell>
-                <TableCell styleSheet={{width: '14%',  }}>{item?.['entidade']?.nome}</TableCell>
-                <TableCell styleSheet={{width: '14%'}}>{converterData(item[0]?.['data_disponibilidade'])}</TableCell>
-                <TableCell styleSheet={{width: '14%'}}>{item?.['evento']?.qtd_pessoas}</TableCell>
-                <TableCell styleSheet={{width: '14%'}}>{(item?.['valor'])?.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</TableCell>
-                <Text styleSheet={{width: '14%', textAlign: 'left', color: 'black'}}>{item?.['observacoes']}</Text>
-                <TableCell styleSheet={{display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '14%', textAlign: 'right'}}>
+            selectedProposta.length > 0 ? selectedProposta.map((item, index)=>(
+            <TableRow key={index} styleSheet={{display: 'flex', flexDirection: 'row', gap: 'none', justifyContent: 'space-between'}}>     
+                <TableCell styleSheet={{width: '19%',  }}>{item?.['id']}</TableCell>
+                <TableCell styleSheet={{width: '19%',  }}>{item?.['entidade']?.nome}</TableCell>
+                <TableCell styleSheet={{width: '16%'}}>{converterData(item[0]?.['data_disponibilidade'])}</TableCell>
+                <TableCell styleSheet={{width: '20%', marginLeft: '5rem'}}>{(item?.['valor'])?.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}</TableCell>
+                <Text styleSheet={{width: '20%', textAlign: 'left', color: 'black', marginLeft: '-5rem'}}>{item?.['observacoes']}</Text>
+                <TableCell styleSheet={{display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '16%', textAlign: 'right'}}>
                   <Box onClick={(e)=>DownloadLink(item?.['arquivo']?.path)} styleSheet={{marginRight: '5rem'}}>
                     <Icon name="file" id='downloadLink' />
                   </Box>
                 </TableCell>
               </TableRow>
-            ))
+            )) : <Text styleSheet={{margin: '4rem auto'}}>Não há orçamentos enviados para o seu evento no momento.</Text>
            }
-              
-            
           </TableBody>
         </Box>
         </Box>
